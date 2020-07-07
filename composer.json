@@ -15,12 +15,10 @@
         "cross-site-scripting",
         "prevent-xss-attacks"
     ],
-    "license": "GPLv2",
+    "license": "LGPL-2.0-only",
     "authors": [
         {
             "name": "Ulf Harnhammar",
-            "email": "mathieu@soosyze.com",
-            "homepage": "https://mathieu-noel.fr",
             "role": "Main coder, project leader"
         },
         {
