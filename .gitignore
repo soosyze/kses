@@ -1,0 +1,10 @@
+# Repertory
+/.scannerwork
+/build/
+/nbproject/
+/vendor/
+
+# Files
+/*.lock
+/*.phar
+/.php_cs.cache

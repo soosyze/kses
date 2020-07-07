@@ -1,0 +1,57 @@
+{
+    "name": "soosyze/kses",
+    "type": "library",
+    "description": "An HTML/XHTML filter written in PHP. Checks on attribute values. Can be used to avoid Cross-Site Scripting (XSS), Buffer Overflows and Denial of Service attacks, among other things.",
+    "version": "0.3.0",
+    "keywords": [
+        "php", 
+        "kses", 
+        "xss",
+        "xss-attacks",
+        "filter", 
+        "web-security", 
+        "security", 
+        "dompurify",
+        "cross-site-scripting",
+        "prevent-xss-attacks"
+    ],
+    "license": "GPLv2",
+    "authors": [
+        {
+            "name": "Ulf Harnhammar",
+            "email": "mathieu@soosyze.com",
+            "homepage": "https://mathieu-noel.fr",
+            "role": "Main coder, project leader"
+        },
+        {
+            "name": "Mathieu NOËL",
+            "email": "mathieu@soosyze.com",
+            "homepage": "https://mathieu-noel.fr",
+            "role": "Coder of Soosyze kses"
+        }
+    ],
+    "require": {
+        "php": ">=5.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "4.8.* || 7.4.*"
+    },
+    "suggest": {
+        "friendsofphp/php-cs-fixer": "Pour normaliser le code PHP.",
+        "phpdocumentor/phpdocumentor": "Pour générer la documentation des services."
+    },
+    "autoload": {
+        "psr-4": { 
+            "Kses\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": { 
+            "Kses\\Tests\\": "tests"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "classmap-authoritative": true
+    }
+}
