@@ -2,7 +2,7 @@
     "name": "soosyze/kses",
     "type": "library",
     "description": "An HTML/XHTML filter written in PHP. Checks on attribute values. Can be used to avoid Cross-Site Scripting (XSS), Buffer Overflows and Denial of Service attacks, among other things.",
-    "version": "0.3.0",
+    "version": "1.0.0",
     "keywords": [
         "php", 
         "kses", 
