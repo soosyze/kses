@@ -1,5 +1,11 @@
 # Soosyze kses (kses strips evil scripts)
 
+[![Build Status](https://travis-ci.org/soosyze/kses.svg?branch=master)](https://travis-ci.org/soosyze/kses "Travis")
+[![Coverage Status](https://coveralls.io/repos/github/soosyze/kses/badge.svg?branch=master)](https://coveralls.io/github/soosyze/kses?branch=master "Coveralls")
+[![GitHub](https://img.shields.io/github/license/soosyze/kses)](https://github.com/soosyze/kses/blob/master/LICENSE "LICENSE")
+[![Packagist](https://img.shields.io/packagist/v/soosyze/kses.svg)](https://packagist.org/packages/soosyze/kses "Packagist")
+[![PHP from Packagist](https://img.shields.io/packagist/php-v/soosyze/kses.svg)](#version-php)
+
 ## Introduction
 
 Welcome to kses - an HTML/XHTML filter written in PHP. It removes all unwanted HTML elements and attributes, no matter how malformed HTML input you give it.
