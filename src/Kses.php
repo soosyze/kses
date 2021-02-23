@@ -475,6 +475,17 @@ class Kses
                  */
                 return strtolower($checkValue) === $vless;
 
+            case 'content':
+                foreach ($checkValue as $check) {
+                    $str     = preg_quote($check, '/');
+                    $pattern = strtr($str, [ '%' => '.*' ]);
+
+                    if (preg_match("/$pattern/", $value)) {
+                        return true;
+                    }
+                }
+
+                return false;
             default:
                 return true;
         }
