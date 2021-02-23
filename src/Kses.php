@@ -607,7 +607,7 @@ class Kses
     {
         $str = preg_replace_callback(
             '/&#([0-9]+);/',
-            function ($matches) {
+            static function ($matches) {
                 return chr($matches[ 1 ]);
             },
             $str
@@ -615,7 +615,7 @@ class Kses
 
         return preg_replace_callback(
             '/&#[Xx]([0-9A-Fa-f]+);/',
-            function ($matches) {
+            static function ($matches) {
                 return chr(hexdec($matches[ 1 ]));
             },
             $str
