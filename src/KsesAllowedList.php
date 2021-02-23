@@ -4,6 +4,7 @@ namespace Kses;
 
 class KsesAllowedList
 {
+
     public static function getProtocols()
     {
         return [
@@ -65,7 +66,7 @@ class KsesAllowedList
             'dl'         => [ 'class' => 1 ],
             'dt'         => [ 'class' => 1 ],
             'em'         => [ 'class' => 1 ],
-            'i'          => [ 'class' => 1 ],
+            'i'          => [ 'aria-hidden' => 1, 'class' => 1 ],
             'img'        => [
                 'alt'      => 1,
                 'align'    => 1,
@@ -88,6 +89,14 @@ class KsesAllowedList
                 'class'    => 1,
                 'dir'      => 1,
                 'lang'     => 1,
+                'style'    => [
+                    'content' => [
+                        'text-align: center;',
+                        'text-align: left;',
+                        'text-align: justify;',
+                        'text-align: right;'
+                    ]
+                ],
                 'xml:lang' => 1
             ],
             'pre'        => [
@@ -292,7 +301,19 @@ class KsesAllowedList
                 'size'    => 1,
                 'width'   => 1
             ],
-            'i'          => [ 'class' => 1 ],
+            'i'          => [ 'aria-hidden' => 1, 'class' => 1 ],
+            'iframe'     => [
+                'allowfullscreen' => 1,
+                'frameborder'     => 1,
+                'height'          => 1,
+                'sandbox'         => 1,
+                'scrolling'       => 1,
+                'src'             => 1,
+                'marginheight'    => 1,
+                'marginwidth'     => 1,
+                'title'           => 1,
+                'width'           => 1
+            ],
             'img'        => [
                 'alt'      => 1,
                 'align'    => 1,
@@ -342,11 +363,19 @@ class KsesAllowedList
                 'class'    => 1,
                 'dir'      => 1,
                 'lang'     => 1,
+                'style'    => [
+                    'content' => [
+                        'text-align: center;',
+                        'text-align: left;',
+                        'text-align: justify;',
+                        'text-align: right;'
+                    ]
+                ],
                 'xml:lang' => 1
             ],
             'pre'        => [ 'class' => 1, 'width' => 1 ],
             'progress'   => [ 'class' => 1 ],
-            'q'          => [ 'cite' => 1, 'class' => 1],
+            'q'          => [ 'cite' => 1, 'class' => 1 ],
             'rp'         => [ 'class' => 1 ],
             'rt'         => [ 'class' => 1 ],
             'ruby'       => [ 'class' => 1 ],
