@@ -4,13 +4,13 @@
     "description": "An HTML/XHTML filter written in PHP. Checks on attribute values. Can be used to avoid Cross-Site Scripting (XSS), Buffer Overflows and Denial of Service attacks, among other things.",
     "version": "1.0.0",
     "keywords": [
-        "php", 
-        "kses", 
+        "php",
+        "kses",
         "xss",
         "xss-attacks",
-        "filter", 
-        "web-security", 
-        "security", 
+        "filter",
+        "web-security",
+        "security",
         "dompurify",
         "cross-site-scripting",
         "prevent-xss-attacks"
@@ -39,12 +39,12 @@
         "phpdocumentor/phpdocumentor": "Pour générer la documentation des services."
     },
     "autoload": {
-        "psr-4": { 
+        "psr-4": {
             "Kses\\": "src"
         }
     },
     "autoload-dev": {
-        "psr-4": { 
+        "psr-4": {
             "Kses\\Tests\\": "tests"
         }
     },

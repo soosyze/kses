@@ -43,8 +43,8 @@ Some of kses current features are:
 
 | Version PHP                 | Soosyze Kses     1.x |
 |-----------------------------|----------------------|
-| <= 5.3                      | ✗ Non supporté       |
-| 5.4 / 5.5 / 5.6             | ✓ Supporté           |
+| <= 5.4                      | ✗ Non supporté       |
+| 5.5 / 5.6                   | ✓ Supporté           |
 | 7.0 / 7.1 / 7.2 / 7.3 / 7.4 | ✓ Supporté           |
 
 ## Installation
@@ -82,7 +82,7 @@ $allowedTags = [
     'b'  => [],
     'br' => [],
     'i'  => [],
-    'p'  => [ 
+    'p'  => [
         'align' => 1
     ]
 ];
@@ -100,9 +100,9 @@ $xss->filter('
 // <p>Quisque sed ligula pulvinar, tempor dolor sit amet, placerat nisl.</p>
 ```
 
-This definition of `$allowed` means that only the elements `b`, `i`, `a`, `p` and `br` are allowed (along with their closing tags `/b`, `/i`, `/a`, `/p` and `/br`). 
-`b`, `i` and `br` may not have any attributes. 
-`a` may only have the attributes `href` and `title`, while `p` may only have the attribute `align`. 
+This definition of `$allowed` means that only the elements `b`, `i`, `a`, `p` and `br` are allowed (along with their closing tags `/b`, `/i`, `/a`, `/p` and `/br`).
+`b`, `i` and `br` may not have any attributes.
+`a` may only have the attributes `href` and `title`, while `p` may only have the attribute `align`.
 You can list the elements and attributes in the array in any mixture of upper and lower case. kses will also recognize HTML code that uses both lower and upper case.
 
 It's important to select the right allowed attributes, so you won't open up an XSS hole by mistake.
@@ -159,7 +159,7 @@ $allowed = [
     'b'  => [],
     'br' => [],
     'i'  => [],
-    'p'  => [ 
+    'p'  => [
         'align' => 1
     ]
 ];
@@ -206,7 +206,7 @@ Of course, this problem is even worse if you put that long URL in a `<frame>` ta
 ### maxval
 
 **maxval** checks that the attribute value is an integer greater than or equal to zero, that it doesn't have an unreasonable amount of zeroes or whitespace (to avoid Buffer Overflows), and that it is not greater than the given value.
-In my example above, it would mean that `<font size='20'>` is accepted but `<font size='21'>` is not. 
+In my example above, it would mean that `<font size='20'>` is accepted but `<font size='21'>` is not.
 This check helps against Denial of Service attacks against WWW clients.
 
 One example of this DoS problem is `<iframe src="http://some.web.server/" width="20000" height="2000">`, which makes some client machines completely overloaded.

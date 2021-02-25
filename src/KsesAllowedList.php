@@ -4,7 +4,6 @@ namespace Kses;
 
 class KsesAllowedList
 {
-
     public static function getProtocols()
     {
         return [
@@ -120,25 +119,7 @@ class KsesAllowedList
      */
     public static function getTagsAdmin()
     {
-        return [
-            'a'          => [
-                'class'    => 1,
-                'download' => [
-                    'valueless' => 'y',
-                ],
-                'href'     => 1,
-                'lang'     => 1,
-                'rel'      => 1,
-                'rev'      => 1,
-                'name'     => 1,
-                'target'   => 1,
-                'title'    => 1
-            ],
-            'abbr'       => [
-                'class' => 1,
-                'lang'  => 1,
-                'title' => 1
-            ],
+        return self::getTags() + [
             'acronym'    => [
                 'class' => 1,
                 'lang'  => 1,
@@ -181,17 +162,9 @@ class KsesAllowedList
                 'preload'  => 1,
                 'src'      => 1
             ],
-            'b'          => [ 'class' => 1 ],
             'bdi'        => [ 'class' => 1 ],
             'bdo'        => [ 'class' => 1, 'dir' => 1 ],
             'big'        => [ 'class' => 1 ],
-            'blockquote' => [
-                'cite'     => 1,
-                'class'    => 1,
-                'lang'     => 1,
-                'xml:lang' => 1
-            ],
-            'br'         => [],
             'button'     => [
                 'class'    => 1,
                 'disabled' => 1,
@@ -200,12 +173,6 @@ class KsesAllowedList
                 'value'    => 1
             ],
             'caption'    => [ 'align' => 1 ],
-            'cite'       => [
-                'class' => 1,
-                'dir'   => 1,
-                'lang'  => 1
-            ],
-            'code'       => [ 'class' => 1 ],
             'col'        => [
                 'align'   => 1,
                 'char'    => 1,
@@ -225,7 +192,6 @@ class KsesAllowedList
                 'valign'  => 1,
                 'width'   => 1
             ],
-            'dd'         => [ 'class' => 1 ],
             'del'        => [ 'class' => 1, 'datetime' => 1 ],
             'details'    => [
                 'align'    => 1,
@@ -243,9 +209,6 @@ class KsesAllowedList
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
-            'dl'         => [ 'class' => 1 ],
-            'dt'         => [ 'class' => 1 ],
-            'em'         => [ 'class' => 1 ],
             'fieldset'   => [ 'class' => 1 ],
             'figcaption' => [
                 'align'    => 1,
@@ -301,7 +264,6 @@ class KsesAllowedList
                 'size'    => 1,
                 'width'   => 1
             ],
-            'i'          => [ 'aria-hidden' => 1, 'class' => 1 ],
             'iframe'     => [
                 'allowfullscreen' => 1,
                 'frameborder'     => 1,
@@ -314,34 +276,14 @@ class KsesAllowedList
                 'title'           => 1,
                 'width'           => 1
             ],
-            'img'        => [
-                'alt'      => 1,
-                'align'    => 1,
-                'border'   => 1,
-                'class'    => 1,
-                'height'   => 1,
-                'hspace'   => 1,
-                'longdesc' => 1,
-                'vspace'   => 1,
-                'src'      => 1,
-                'usemap'   => 1,
-                'width'    => 1
-            ],
             'ins'        => [
                 'datetime' => 1,
                 'cite'     => 1,
                 'class'    => 1
             ],
-            'kbd'        => [ 'class' => 1 ],
             'label'      => [ 'class' => 1, 'for' => 1 ],
             'legend'     => [ 'align' => 1, 'class' => 1 ],
-            'li'         => [
-                'align' => 1,
-                'class' => 1,
-                'value' => 1
-            ],
             'map'        => [ 'class' => 1, 'name' => 1 ],
-            'mark'       => [ 'class' => 1 ],
             'menu'       => [ 'class' => 1, 'type' => 1 ],
             'meter'      => [ 'class' => 1 ],
             'nav'        => [
@@ -351,29 +293,7 @@ class KsesAllowedList
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
-            'ol'         => [
-                'class'    => 1,
-                'start'    => 1,
-                'type'     => 1,
-                'reversed' => 1
-            ],
             'output'     => [ 'class' => 1 ],
-            'p'          => [
-                'align'    => 1,
-                'class'    => 1,
-                'dir'      => 1,
-                'lang'     => 1,
-                'style'    => [
-                    'content' => [
-                        'text-align: center;',
-                        'text-align: left;',
-                        'text-align: justify;',
-                        'text-align: right;'
-                    ]
-                ],
-                'xml:lang' => 1
-            ],
-            'pre'        => [ 'class' => 1, 'width' => 1 ],
             'progress'   => [ 'class' => 1 ],
             'q'          => [ 'cite' => 1, 'class' => 1 ],
             'rp'         => [ 'class' => 1 ],
@@ -388,7 +308,6 @@ class KsesAllowedList
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
-            'small'      => [ 'class' => 1 ],
             'span'       => [
                 'align'    => 1,
                 'class'    => 1,
@@ -397,8 +316,6 @@ class KsesAllowedList
                 'xml:lang' => 1
             ],
             'strike'     => [ 'class' => 1 ],
-            'strong'     => [ 'class' => 1 ],
-            'sub'        => [ 'class' => 1 ],
             'summary'    => [
                 'align'    => 1,
                 'class'    => 1,
@@ -406,7 +323,6 @@ class KsesAllowedList
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
-            'sup'        => [ 'class' => 1 ],
             'table'      => [
                 'align'       => 1,
                 'bgcolor'     => 1,
@@ -493,9 +409,6 @@ class KsesAllowedList
                 'srclang' => 1
             ],
             'tt'         => [ 'class' => 1 ],
-            'u'          => [ 'class' => 1 ],
-            'ul'         => [ 'class' => 1, 'type' => 1 ],
-            'var'        => [ 'class' => 1 ],
             'video'      => [
                 'autoplay' => 1,
                 'class'    => 1,
