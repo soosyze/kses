@@ -4,6 +4,9 @@ namespace Kses;
 
 class KsesAllowedList
 {
+    /**
+     * @return array
+     */
     public static function getProtocols()
     {
         return [
@@ -62,6 +65,21 @@ class KsesAllowedList
             ],
             'code'       => [ 'class' => 1 ],
             'dd'         => [ 'class' => 1 ],
+            'div'        => [
+                'align'    => 1,
+                'class'    => 1,
+                'dir'      => 1,
+                'lang'     => 1,
+                'style'    => [
+                    'content' => [
+                        'text-align: center;',
+                        'text-align: left;',
+                        'text-align: justify;',
+                        'text-align: right;'
+                    ]
+                ],
+                'xml:lang' => 1
+            ],
             'dl'         => [ 'class' => 1 ],
             'dt'         => [ 'class' => 1 ],
             'em'         => [ 'class' => 1 ],
@@ -202,13 +220,6 @@ class KsesAllowedList
                 'xml:lang' => 1
             ],
             'dfn'        => [ 'class' => 1 ],
-            'div'        => [
-                'align'    => 1,
-                'class'    => 1,
-                'dir'      => 1,
-                'lang'     => 1,
-                'xml:lang' => 1
-            ],
             'fieldset'   => [ 'class' => 1 ],
             'figcaption' => [
                 'align'    => 1,
@@ -237,12 +248,78 @@ class KsesAllowedList
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
-            'h1'         => [ 'align' => 1, 'class' => 1 ],
-            'h2'         => [ 'align' => 1, 'class' => 1 ],
-            'h3'         => [ 'align' => 1, 'class' => 1 ],
-            'h4'         => [ 'align' => 1, 'class' => 1 ],
-            'h5'         => [ 'align' => 1, 'class' => 1 ],
-            'h6'         => [ 'align' => 1, 'class' => 1 ],
+            'h1'         => [
+                'align' => 1,
+                'class' => 1,
+                'style' => [
+                    'content' => [
+                        'text-align: center;',
+                        'text-align: left;',
+                        'text-align: justify;',
+                        'text-align: right;'
+                    ]
+                ],
+            ],
+            'h2'         => [
+                'align' => 1,
+                'class' => 1,
+                'style' => [
+                    'content' => [
+                        'text-align: center;',
+                        'text-align: left;',
+                        'text-align: justify;',
+                        'text-align: right;'
+                    ]
+                ],
+            ],
+            'h3'         => [
+                'align' => 1,
+                'class' => 1,
+                'style' => [
+                    'content' => [
+                        'text-align: center;',
+                        'text-align: left;',
+                        'text-align: justify;',
+                        'text-align: right;'
+                    ]
+                ],
+            ],
+            'h4'         => [
+                'align' => 1,
+                'class' => 1,
+                'style' => [
+                    'content' => [
+                        'text-align: center;',
+                        'text-align: left;',
+                        'text-align: justify;',
+                        'text-align: right;'
+                    ]
+                ],
+            ],
+            'h5'         => [
+                'align' => 1,
+                'class' => 1,
+                'style' => [
+                    'content' => [
+                        'text-align: center;',
+                        'text-align: left;',
+                        'text-align: justify;',
+                        'text-align: right;'
+                    ]
+                ],
+            ],
+            'h6'         => [
+                'align' => 1,
+                'class' => 1,
+                'style' => [
+                    'content' => [
+                        'text-align: center;',
+                        'text-align: left;',
+                        'text-align: justify;',
+                        'text-align: right;'
+                    ]
+                ],
+            ],
             'header'     => [
                 'align'    => 1,
                 'class'    => 1,
