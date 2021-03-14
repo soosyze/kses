@@ -55,8 +55,8 @@ class Kses
     }
 
     /**
-     * @param type  $allowedTag
-     * @param array $attr
+     * @param string $allowedTag
+     * @param array  $attr
      *
      * @return $this
      */
@@ -68,7 +68,7 @@ class Kses
     }
 
     /**
-     * @param string $allowedProtocols
+     * @param array $allowedProtocols
      *
      * @return $this
      */
@@ -114,7 +114,7 @@ class Kses
         /* Remove Netscape 4 JS entities. */
         $str = preg_replace('%&\s*\{[^}]*(\}\s*;?|$)%', '', $str);
 
-        $str = $this->normalizeEntities($str);
+        $str = self::normalizeEntities($str);
 
         return preg_replace_callback('%
             (
@@ -211,7 +211,7 @@ class Kses
      * @param string $tag
      * @param string $attr
      *
-     * @return type
+     * @return string
      */
     protected function stripAttributes($tag, $attr)
     {
@@ -247,7 +247,7 @@ class Kses
                 /* There are some checks. */
                 $ok = true;
                 foreach ($current as $key => $value) {
-                    if (!$this->checkAttrVal(
+                    if (!self::checkAttrVal(
                         $arrEach[ 'value' ],
                         $arrEach[ 'vless' ],
                         $key,
@@ -282,7 +282,7 @@ class Kses
      *
      * @param string $attr
      *
-     * @return string
+     * @return array
      */
     protected function combineAttributes($attr)
     {
@@ -392,7 +392,7 @@ class Kses
 
             if ($working === 0) {
                 /* Not well formed, remove and try again. */
-                $attr = $this->htmlError($attr);
+                $attr = self::htmlError($attr);
                 $mode = 0;
             }
         }
@@ -423,7 +423,7 @@ class Kses
      *
      * @return boolean
      */
-    protected function checkAttrVal($value, $vless, $checkName, $checkValue)
+    protected static function checkAttrVal($value, $vless, $checkName, $checkValue)
     {
         switch ($checkName) {
             case 'maxlen':
@@ -534,7 +534,7 @@ class Kses
      *
      * @return string
      */
-    protected function htmlError($str)
+    protected static function htmlError($str)
     {
         return preg_replace('/
         ^
@@ -559,7 +559,7 @@ class Kses
      */
     protected function badProtocolOnce(array $str)
     {
-        $string = $this->decodeEntities($str[ 1 ]);
+        $string = self::decodeEntities($str[ 1 ]);
         $string = preg_replace('/\s/', '', $string);
         /* Deals with Opera "feature". */
         $string = preg_replace('/\xad+/', '', $string);
@@ -578,7 +578,7 @@ class Kses
      *
      * @return string
      */
-    protected function normalizeEntities($str)
+    protected static function normalizeEntities($str)
     {
         /* Disarm all entities by converting & to &amp; */
         $str = str_replace('&', '&amp;', $str);
@@ -614,7 +614,7 @@ class Kses
      *
      * @return string
      */
-    protected function decodeEntities($str)
+    protected static function decodeEntities($str)
     {
         $str = preg_replace_callback(
             '/&#([0-9]+);/',
