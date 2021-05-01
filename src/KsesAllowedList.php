@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Kses;
 
 class KsesAllowedList
@@ -7,22 +9,11 @@ class KsesAllowedList
     /**
      * @return array
      */
-    public static function getProtocols()
+    public static function getProtocols(): array
     {
         return [
-            'ftp',
-            'http',
-            'https',
-            'irc',
-            'mailto',
-            'news',
-            'nntp',
-            'rtsp',
-            'sftp',
-            'ssh',
-            'tel',
-            'telnet',
-            'webcal'
+            'ftp', 'http', 'https', 'irc', 'mailto', 'news', 'nntp', 'rtsp', 'sftp',
+            'ssh', 'tel', 'telnet', 'webcal'
         ];
     }
 
@@ -31,7 +22,7 @@ class KsesAllowedList
      *
      * @return array
      */
-    public static function getTags()
+    public static function getTags(): array
     {
         return [
             'a'          => [
@@ -135,7 +126,7 @@ class KsesAllowedList
      *
      * @return array
      */
-    public static function getTagsAdmin()
+    public static function getTagsAdmin(): array
     {
         return self::getTags() + [
             'acronym'    => [

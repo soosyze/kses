@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * @license http://www.gnu.org/licenses/gpl.html GPLv2
  * Based on kses by Ulf Harnhammar, see http://sourceforge.net/projects/kses.
@@ -26,10 +28,6 @@ class Kses
      */
     protected $allowedProtocols = [];
 
-    /**
-     * @param array $allowedHtml
-     * @param array $allowedProtocols
-     */
     public function __construct(
         array $allowedHtml = [],
         array $allowedProtocols = []
@@ -42,49 +40,28 @@ class Kses
             : $allowedProtocols;
     }
 
-    /**
-     * @param array $allowedTags
-     *
-     * @return $this
-     */
-    public function setAllowedTags(array $allowedTags)
+    public function setAllowedTags(array $allowedTags): self
     {
         $this->allowedHtml = $allowedTags;
 
         return $this;
     }
 
-    /**
-     * @param string $allowedTag
-     * @param array  $attr
-     *
-     * @return $this
-     */
-    public function addAllowedTag($allowedTag, array $attr = [])
+    public function addAllowedTag(string $allowedTag, array $attr = []): self
     {
         $this->allowedHtml[ $allowedTag ] = $attr;
 
         return $this;
     }
 
-    /**
-     * @param array $allowedProtocols
-     *
-     * @return $this
-     */
-    public function setAllowedProtocols(array $allowedProtocols)
+    public function setAllowedProtocols(array $allowedProtocols): self
     {
         $this->allowedProtocols = $allowedProtocols;
 
         return $this;
     }
 
-    /**
-     * @param string $allowedProtocol
-     *
-     * @return $this
-     */
-    public function addAllowedProtocol($allowedProtocol)
+    public function addAllowedProtocol(string $allowedProtocol): self
     {
         $this->allowedProtocols[] = $allowedProtocol;
 
@@ -102,7 +79,7 @@ class Kses
      * @return string An XSS safe version of $string,
      *                or an empty string if $string is not valid UTF-8.
      */
-    public function filter($str)
+    public function filter(string $str): string
     {
         if (!$this->isUtf8($str)) {
             return '';
@@ -112,11 +89,11 @@ class Kses
         $str = str_replace(chr(0), '', $str);
 
         /* Remove Netscape 4 JS entities. */
-        $str = preg_replace('%&\s*\{[^}]*(\}\s*;?|$)%', '', $str);
+        $str = preg_replace('%&\s*\{[^}]*(\}\s*;?|$)%', '', $str) ?? '';
 
         $str = self::normalizeEntities($str);
 
-        return preg_replace_callback('%
+        return (string) preg_replace_callback('%
             (
             <(?=[^a-zA-Z!/])  # a lone <
             |                 # or
@@ -125,15 +102,13 @@ class Kses
             <[^>]*(>|$)       # a string that starts with a <, up until the > or the end of the string
             |                 # or
             >                 # just a >
-            )%x', [ $this, 'stripTags' ], $str);
+            )%x', [ $this, 'stripTags' ], $str) ?? '';
     }
 
     /**
      * @param string $str
-     *
-     * @return boolean
      */
-    protected function isUtf8($str)
+    protected function isUtf8(string $str): bool
     {
         if (strlen($str) === 0) {
             return true;
@@ -151,12 +126,8 @@ class Kses
      * like <:::>. It returns an empty string, if the element isn't allowed (look
      * ma, no strip_tags()!). Otherwise it splits the tag into an element and an
      * attribute list.
-     *
-     * @param array $match
-     *
-     * @return string
      */
-    protected function stripTags($match)
+    protected function stripTags(array $match): string
     {
         $str = $match[ 0 ];
 
@@ -175,7 +146,7 @@ class Kses
         }
 
         $slash    = trim($matches[ 1 ]);
-        $tag     = &$matches[ 2 ];
+        $tag      = &$matches[ 2 ];
         $attrList = &$matches[ 3 ];
         $comment  = &$matches[ 4 ];
 
@@ -213,7 +184,7 @@ class Kses
      *
      * @return string
      */
-    protected function stripAttributes($tag, $attr)
+    protected function stripAttributes(string $tag, string $attr): string
     {
         /* Is there a closing XHTML slash at the end of the attributes? */
         $xhtmlSlash = preg_match('%\s/\s*$%', $attr)
@@ -228,48 +199,44 @@ class Kses
         /* Split it. */
         $attrArr = $this->combineAttributes($attr);
 
-        /* Go through $attrArr, and save the allowed attributes for this element in $attr2. */
-        $attr2 = '';
+        /* Go through $attrArr, and save the allowed attributes for this element in $attrList. */
+        $attrList = '';
+
+        $tagAllowed = strtolower($tag);
 
         foreach ($attrArr as $arrEach) {
-            if (!isset($this->allowedHtml[ strtolower($tag) ][ strtolower($arrEach[ 'name' ]) ])) {
+            $current = $this->allowedHtml[ $tagAllowed ][ strtolower($arrEach[ 'name' ]) ] ?? null;
+
+            if ($current === null) {
                 /* The attribute is not allowed. */
                 continue;
             }
 
-            $current = $this->allowedHtml[ strtolower($tag) ][ strtolower($arrEach[ 'name' ]) ];
-
             if (!is_array($current)) {
-                $attr2 .= ' ' . $arrEach[ 'whole' ];
+                $attrList .= ' ' . $arrEach[ 'whole' ];
+
+                continue;
             }
-            /* There are no checks. */
-            else {
-                /* There are some checks. */
-                $ok = true;
-                foreach ($current as $key => $value) {
-                    if (!self::checkAttrVal(
-                        $arrEach[ 'value' ],
-                        $arrEach[ 'vless' ],
-                        $key,
-                        $value
-                    )) {
-                        $ok = false;
 
-                        break;
-                    }
-                }
+            foreach ($current as $key => $value) {
+                if (self::checkAttrVal(
+                    $arrEach[ 'value' ],
+                    $arrEach[ 'vless' ],
+                    $key,
+                    $value
+                )) {
+                    /* It passed them. */
+                    $attrList .= ' ' . $arrEach[ 'whole' ];
 
-                /* It passed them. */
-                if ($ok) {
-                    $attr2 .= ' ' . $arrEach[ 'whole' ];
+                    break;
                 }
             }
         }
 
         /* Remove any "<" or ">" characters. */
-        $attr2 = preg_replace('/[<>]/', '', $attr2);
+        $attrList = preg_replace('/[<>]/', '', $attrList) ?? '';
 
-        return "<$tag$attr2$xhtmlSlash>";
+        return "<$tag$attrList$xhtmlSlash>";
     }
 
     /**
@@ -284,7 +251,7 @@ class Kses
      *
      * @return array
      */
-    protected function combineAttributes($attr)
+    protected function combineAttributes(string $attr): array
     {
         $attrArr  = [];
         $mode     = 0;
@@ -302,7 +269,7 @@ class Kses
                     if (preg_match('/^([-a-zA-Z]+)/', $attr, $match)) {
                         $working  = 1;
                         $mode     = 1;
-                        $attr     = preg_replace('/^[-a-zA-Z]+/', '', $attr);
+                        $attr     = preg_replace('/^[-a-zA-Z]+/', '', $attr) ?? '';
                         $attrName = strtolower($match[ 1 ]);
                     }
 
@@ -314,7 +281,7 @@ class Kses
                         /* Equals sign. */
                         $working = 1;
                         $mode    = 2;
-                        $attr    = preg_replace('/^\s*=\s*/', '', $attr);
+                        $attr    = preg_replace('/^\s*=\s*/', '', $attr) ?? '';
 
                         break;
                     }
@@ -323,7 +290,7 @@ class Kses
                         /* Valueless. */
                         $working = 1;
                         $mode    = 0;
-                        $attr    = preg_replace('/^\s+/', '', $attr);
+                        $attr    = preg_replace('/^\s+/', '', $attr) ?? '';
 
                         $attrArr[] = [
                             'name'  => $attrName,
@@ -341,7 +308,7 @@ class Kses
                         /* "value" */
                         $working = 1;
                         $mode    = 0;
-                        $attr    = preg_replace('/^"[^"]*"(\s+|$)/', '', $attr);
+                        $attr    = preg_replace('/^"[^"]*"(\s+|$)/', '', $attr) ?? '';
                         $thisVal = $this->badProtocol($match[ 1 ]);
 
                         $attrArr[] = [
@@ -358,7 +325,7 @@ class Kses
                         /* 'value' */
                         $working = 1;
                         $mode    = 0;
-                        $attr    = preg_replace("/^'[^']*'(\s+|$)/", '', $attr);
+                        $attr    = preg_replace("/^'[^']*'(\s+|$)/", '', $attr) ?? '';
                         $thisVal = $this->badProtocol($match[ 1 ]);
 
                         $attrArr[] = [
@@ -376,7 +343,7 @@ class Kses
                         $working = 1;
                         $mode    = 0;
                         /* We add quotes to conform to W3C's HTML spec. */
-                        $attr    = preg_replace("%^[^\s\"']+(\s+|$)%", '', $attr);
+                        $attr    = preg_replace("%^[^\s\"']+(\s+|$)%", '', $attr) ?? '';
                         $thisVal = $this->badProtocol($match[ 1 ]);
 
                         $attrArr[] = [
@@ -416,17 +383,24 @@ class Kses
      * implemented checks are "maxlen", "minlen", "maxval", "minval" and "valueless"
      * with even more checks to come soon.
      *
-     * @param string $value
-     * @param string $vless
-     * @param string $checkName
-     * @param string $checkValue
+     * @param string               $value
+     * @param string               $vless
+     * @param string               $checkName
+     * @param numeric|string|array $checkValue
      *
      * @return boolean
      */
-    protected static function checkAttrVal($value, $vless, $checkName, $checkValue)
-    {
+    protected static function checkAttrVal(
+        string $value,
+        string $vless,
+        string $checkName,
+        $checkValue
+    ): bool {
         switch ($checkName) {
             case 'maxlen':
+                if (!\is_numeric($checkValue)) {
+                    throw new \InvalidArgumentException('maxlen must be of type numeric, ' . gettype($checkValue) . ' given');
+                }
                 /*
                  * The maxlen check makes sure that the attribute value has a length not
                  * greater than the given value. This can be used to avoid Buffer Overflows
@@ -435,6 +409,9 @@ class Kses
                 return strlen($value) <= $checkValue;
 
             case 'minlen':
+                if (!\is_numeric($checkValue)) {
+                    throw new \InvalidArgumentException('maxlen must be of type numeric, ' . gettype($checkValue) . ' given');
+                }
                 /*
                  * The minlen check makes sure that the attribute value has a length not
                  * smaller than the given value.
@@ -442,6 +419,9 @@ class Kses
                 return strlen($value) >= $checkValue;
 
             case 'maxval':
+                if (!\is_numeric($checkValue)) {
+                    throw new \InvalidArgumentException('maxlen must be of type numeric, ' . gettype($checkValue) . ' given');
+                }
                 /*
                  * The maxval check does two things: it checks that the attribute value is
                  * an integer from 0 and up, without an excessive amount of zeroes or
@@ -456,6 +436,9 @@ class Kses
                 return $value <= $checkValue;
 
             case 'minval':
+                if (!\is_numeric($checkValue)) {
+                    throw new \InvalidArgumentException('maxlen must be of type numeric, ' . gettype($checkValue) . ' given');
+                }
                 /*
                  * The minval check checks that the attribute value is a positive integer,
                  * and that it is not smaller than the given value.
@@ -467,6 +450,9 @@ class Kses
                 return $value >= $checkValue;
 
             case 'valueless':
+                if (!\is_string($checkValue)) {
+                    throw new \InvalidArgumentException('valueless must be of type string, ' . gettype($checkValue) . ' given');
+                }
                 /*
                  * The valueless check checks if the attribute has a value
                  * (like <a href="blah">) or not (<option selected>). If the given value
@@ -476,6 +462,9 @@ class Kses
                 return strtolower($checkValue) === $vless;
 
             case 'content':
+                if (!\is_array($checkValue)) {
+                    throw new \InvalidArgumentException('content must be of type array, ' . gettype($checkValue) . ' given');
+                }
                 foreach ($checkValue as $check) {
                     $str     = preg_quote($check, '/');
                     $pattern = strtr($str, [ '%' => '.*' ]);
@@ -496,17 +485,15 @@ class Kses
      * $str. It ignores whitespace and the case of the letters, and it does
      * understand HTML entities. It does its work in a while loop, so it won't be
      * fooled by a string like "javascript:javascript:alert(57)".
-     *
-     * @param string $str
-     *
-     * @return string
      */
-    protected function badProtocol($str)
+    protected function badProtocol(string $str): string
     {
         /* Removes any NULL characters in $str. */
-        $str    = str_replace(chr(0), '', $str);
+        $str = str_replace(chr(0), '', $str);
+
         /* Deals with Opera "feature". */
-        $string = preg_replace('/\xad+/', '', $str) . 'a';
+        $string = preg_replace('/\xad+/', '', $str)  ?? '';
+        $string .= 'a';
 
         while ($str !== $string) {
             $string = $str;
@@ -519,7 +506,7 @@ class Kses
                 '/^((&[^;]*;|[\sA-Za-z0-9])*)(:|&#58;|&#[Xx]3[Aa];)\s*/',
                 [ $this, 'badProtocolOnce' ],
                 $str
-            );
+            ) ?? '';
         }
 
         return $str;
@@ -529,12 +516,8 @@ class Kses
      * This function deals with parsing errors in combineAttributes(). The general plan is
      * to remove everything to and including some whitespace, but it deals with
      * quotes and apostrophes as well.
-     *
-     * @param string $str
-     *
-     * @return string
      */
-    protected static function htmlError($str)
+    protected static function htmlError(string $str): string
     {
         return preg_replace('/
         ^
@@ -546,23 +529,19 @@ class Kses
         \S              # - a non-whitespace character
         )*              # any number of the above three
         \s*             # any number of whitespaces
-        /x', '', $str);
+        /x', '', $str) ?? '';
     }
 
     /**
      * This function processes URL protocols, checks to see if they're in the white-
      * list or not, and returns different data depending on the answer.
-     *
-     * @param array $str
-     *
-     * @return string
      */
-    protected function badProtocolOnce(array $str)
+    protected function badProtocolOnce(array $str): string
     {
-        $string = self::decodeEntities($str[ 1 ]);
-        $string = preg_replace('/\s/', '', $string);
+        $string = self::deleteEntities($str[ 1 ]);
+        $string = preg_replace('/\s/', '', $string) ?? '';
         /* Deals with Opera "feature". */
-        $string = preg_replace('/\xad+/', '', $string);
+        $string = preg_replace('/\xad+/', '', $string) ?? '';
         $string = strtolower($string);
 
         return in_array($string, $this->allowedProtocols)
@@ -573,12 +552,8 @@ class Kses
     /**
      * This function normalizes HTML entities. It will convert "AT&T" to the correct
      * "AT&amp;T", "&#00058;" to "&#58;", "&#XYZZY;" to "&amp;#XYZZY;" and so on.
-     *
-     * @param string $str
-     *
-     * @return string
      */
-    protected static function normalizeEntities($str)
+    protected static function normalizeEntities(string $str): string
     {
         /* Disarm all entities by converting & to &amp; */
         $str = str_replace('&', '&amp;', $str);
@@ -588,48 +563,32 @@ class Kses
             '/&amp;#([0-9]+;)/',
             '&#\1',
             $str
-        );
+        ) ?? '';
 
         /* Hexadecimal numeric entities. */
         $str = preg_replace(
             '/&amp;#[Xx]0*((?:[0-9A-Fa-f]{2})+;)/',
             '&#x\1',
             $str
-        );
+        ) ?? '';
 
         /* Named entities. */
         return preg_replace(
             '/&amp;([A-Za-z][A-Za-z0-9]*;)/',
             '&\1',
             $str
-        );
+        ) ?? '';
     }
 
     /**
-     * This function decodes numeric HTML entities (&#65; and &#x41;). It doesn't
+     * This function delete numeric HTML entities (&#65; and &#x41;). It doesn't
      * do anything with other entities like &auml;, but we don't need them in the
      * URL protocol whitelisting system anyway.
-     *
-     * @param string $str
-     *
-     * @return string
      */
-    protected static function decodeEntities($str)
+    protected static function deleteEntities(string $str): string
     {
-        $str = preg_replace_callback(
-            '/&#([0-9]+);/',
-            static function ($matches) {
-                return chr($matches[ 1 ]);
-            },
-            $str
-        );
+        $str = preg_replace('/&#([0-9]+);/', '', $str) ?? '';
 
-        return preg_replace_callback(
-            '/&#[Xx]([0-9A-Fa-f]+);/',
-            static function ($matches) {
-                return chr(hexdec($matches[ 1 ]));
-            },
-            $str
-        );
+        return preg_replace('/&#[Xx]([0-9A-Fa-f]+);/', '', $str) ?? '';
     }
 }

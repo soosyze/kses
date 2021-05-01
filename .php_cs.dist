@@ -8,7 +8,7 @@
  * @see https://mlocati.github.io/php-cs-fixer-configurator/#version:2.16
  */
 $finder = PhpCsFixer\Finder::create()
-    ->notPath('bootstrap/requirements.php')
+    ->exclude('build')
     ->in(__DIR__);
 
 return PhpCsFixer\Config::create()
