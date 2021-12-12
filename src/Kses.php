@@ -102,7 +102,7 @@ class Kses
             <[^>]*(>|$)       # a string that starts with a <, up until the > or the end of the string
             |                 # or
             >                 # just a >
-            )%x', [ $this, 'stripTags' ], $str) ?? '';
+            )%x', [ $this, 'stripTags' ], $str);
     }
 
     /**
