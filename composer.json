@@ -31,6 +31,7 @@
         "php": ">=7.2"
     },
     "require-dev": {
+        "soosyze/php-cs-fixer-config": "^1.0",
         "phpstan/phpstan": "^0.12.85",
         "phpstan/phpstan-phpunit": "^0.12.18",
         "phpunit/phpunit": "^8.5"
