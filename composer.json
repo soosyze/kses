@@ -51,6 +51,7 @@
         }
     },
     "config": {
+        "bin-dir": "bin",
         "optimize-autoloader": true,
         "classmap-authoritative": true
     }
