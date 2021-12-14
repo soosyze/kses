@@ -1,6 +1,6 @@
 # Soosyze kses (kses strips evil scripts)
 
-[![Build Status](https://travis-ci.org/soosyze/kses.svg?branch=master)](https://travis-ci.org/soosyze/kses "Travis")
+[![Build Status](https://github.com/soosyze/kses/workflows/Tests/badge.svg?branch=master)](https://github.com/soosyze/kses/actions?query=branch:master "Tests")
 [![Coverage Status](https://coveralls.io/repos/github/soosyze/kses/badge.svg?branch=master)](https://coveralls.io/github/soosyze/kses?branch=master "Coveralls")
 [![GitHub](https://img.shields.io/github/license/soosyze/kses)](https://github.com/soosyze/kses/blob/master/LICENSE "LICENSE")
 [![Packagist](https://img.shields.io/packagist/v/soosyze/kses.svg)](https://packagist.org/packages/soosyze/kses "Packagist")
@@ -41,13 +41,11 @@ Some of kses current features are:
 
 ### Version PHP
 
-| Version PHP     | Soosyze Kses 1.x | Soosyze Kses 2.x |
-|-----------------|------------------|------------------|
-| <= 5.4          | ✗ Unsupported    | ✗ Unsupported    |
-| 5.5 / 5.6       | ✓ Supported      | ✗ Unsupported    |
-| 7.0 / 7.1       | ✓ Supported      | ✗ Unsupported    |
-| 7.2 / 7.3 / 7.4 | ✓ Supported      | ✓ Supported      |
-| 8.0             | ✗ Unsupported    | ✓ Supported      |
+| Version PHP     | Soosyze Kses 3.x |
+|-----------------|------------------|
+| <= 7.1          | ✗ Unsupported    |
+| 7.2 / 7.3 / 7.4 | ✓ Supported      |
+| 8.0 / 8.1       | ✓ Supported      |
 
 ## Installation
 
@@ -272,4 +270,4 @@ Thanks also go to a lot of people who posted to the Bugtraq and mailing lists ab
 
 The program is released under the terms of the GNU General Public License.
 You should look into what that means, before using kses in your programs.
-You can find the full text of the license in the file LICENSE.
+You can find the full text of the license in the [file LICENSE](/LICENSE).
