@@ -413,9 +413,7 @@ class KsesOwaspTest extends \PHPUnit\Framework\TestCase
     public function testDownlevelHiddenBlock(): void
     {
         $filter = $this->kses
-            ->filter('<!--[if gte IE 4]>'
-            . '<SCRIPT>alert(\'XSS\');</SCRIPT>'
-            . '<![endif]-->');
+            ->filter('<!--[if gte IE 4]><SCRIPT>alert(\'XSS\');</SCRIPT><![endif]-->');
 
         $this->assertEquals($filter, '');
     }

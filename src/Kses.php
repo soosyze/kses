@@ -93,7 +93,8 @@ class Kses
 
         $str = self::normalizeEntities($str);
 
-        return (string) preg_replace_callback('%
+        return (string) preg_replace_callback(
+            '%
             (
             <(?=[^a-zA-Z!/])  # a lone <
             |                 # or
@@ -102,7 +103,12 @@ class Kses
             <[^>]*(>|$)       # a string that starts with a <, up until the > or the end of the string
             |                 # or
             >                 # just a >
-            )%x', [ $this, 'stripTags' ], $str);
+            )%x',
+            function (array $match): string {
+                return $this->stripTags($match);
+            },
+            $str
+        );
     }
 
     /**
@@ -110,7 +116,7 @@ class Kses
      */
     protected function isUtf8(string $str): bool
     {
-        if (strlen($str) === 0) {
+        if ($str === '') {
             return true;
         }
         /*
@@ -429,7 +435,7 @@ class Kses
                  * value is not greater than the given value.
                  * This check can be used to avoid Denial of Service attacks.
                  */
-                if (!preg_match('/^\s{0,6}[0-9]{1,6}\s{0,6}$/', $value)) {
+                if (!preg_match('/^\s{0,6}\d{1,6}\s{0,6}$/', $value)) {
                     return false;
                 }
 
@@ -443,7 +449,7 @@ class Kses
                  * The minval check checks that the attribute value is a positive integer,
                  * and that it is not smaller than the given value.
                  */
-                if (!preg_match('/^\s{0,6}[0-9]{1,6}\s{0,6}$/', $value)) {
+                if (!preg_match('/^\s{0,6}\d{1,6}\s{0,6}$/', $value)) {
                     return false;
                 }
 
@@ -504,7 +510,9 @@ class Kses
              */
             $str = preg_replace_callback(
                 '/^((&[^;]*;|[\sA-Za-z0-9])*)(:|&#58;|&#[Xx]3[Aa];)\s*/',
-                [ $this, 'badProtocolOnce' ],
+                function (array $str) : string {
+                    return $this->badProtocolOnce($str);
+                },
                 $str
             ) ?? '';
         }
@@ -560,7 +568,7 @@ class Kses
 
         /* Entités numériques décimales. */
         $str = preg_replace(
-            '/&amp;#([0-9]+;)/',
+            '/&amp;#(\d+;)/',
             '&#\1',
             $str
         ) ?? '';
@@ -587,7 +595,7 @@ class Kses
      */
     protected static function deleteEntities(string $str): string
     {
-        $str = preg_replace('/&#([0-9]+);/', '', $str) ?? '';
+        $str = preg_replace('/&#(\d+);/', '', $str) ?? '';
 
         return preg_replace('/&#[Xx]([0-9A-Fa-f]+);/', '', $str) ?? '';
     }
