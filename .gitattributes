@@ -8,3 +8,4 @@
 .php-cs-fixer.dist.php export-ignore
 phpdoc.dist.xml export-ignore
 phpunit.xml export-ignore
+rector.php export-ignore

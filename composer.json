@@ -34,7 +34,8 @@
         "soosyze/php-cs-fixer-config": "^1.0",
         "phpstan/phpstan": "^1.1",
         "phpstan/phpstan-phpunit": "^1.0",
-        "phpunit/phpunit": "^8.5"
+        "phpunit/phpunit": "^8.5",
+        "rector/rector": "^0.12"
     },
     "suggest": {
         "friendsofphp/php-cs-fixer": "Pour normaliser le code PHP.",
