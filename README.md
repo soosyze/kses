@@ -17,32 +17,32 @@ Pass the tests of protection against XSS attacks proposed by the [OWASP® Founda
 
 Some of kses current features are:
 
-* It will only allow the HTML elements and attributes that it was explicitly told to allow,
-* Element and attribute names are case-insensitive (`a href` vs `A HREF`),
-* It will understand and process whitespace correctly,
-* Attribute values can be surrounded with quotes, apostrophes or nothing,
-* It will accept valueless attributes with just names and no values (selected),
-* It will accept XHTML's closing ` /` marks,
-* Attribute values that are surrounded with nothing will get quotes to avoid producing non-W3C conforming HTML,
-  * Example : `<a href=http://foo.com>` works but isn't valid HTML.
-* It handles lots of types of malformed HTML, by interpreting the existing code the best it can and then rebuilding new code from it.
+- It will only allow the HTML elements and attributes that it was explicitly told to allow,
+- Element and attribute names are case-insensitive (`a href` vs `A HREF`),
+- It will understand and process whitespace correctly,
+- Attribute values can be surrounded with quotes, apostrophes or nothing,
+- It will accept valueless attributes with just names and no values (selected),
+- It will accept XHTML's closing ` /` marks,
+- Attribute values that are surrounded with nothing will get quotes to avoid producing non-W3C conforming HTML,
+  - Example : `<a href=http://foo.com>` works but isn't valid HTML.
+- It handles lots of types of malformed HTML, by interpreting the existing code the best it can and then rebuilding new code from it.
   That's a better approach than trying to process existing code, as you're bound to forget about some weird special case somewhere. It handles problems like never-ending quotes and tags gracefully,
-* It will remove additional `<` and `>` characters that people may try to sneak in somewhere,
-* It supports checking attribute values for minimum/maximum length and minimum/maximum value, to protect against Buffer Overflows and Denial of Service attacks against WWW clients and various servers.
+- It will remove additional `<` and `>` characters that people may try to sneak in somewhere,
+- It supports checking attribute values for minimum/maximum length and minimum/maximum value, to protect against Buffer Overflows and Denial of Service attacks against WWW clients and various servers.
   You can stop `<iframe src= width= height=>` from having too high values for width and height, for instance,
-* It has got a system for allowed listing URL protocols. You can say that attribute values may only start with `http:`, `https:`, `ftp:` and `gopher:`, but no other URL protocols (`javascript:`, `java:`, `about:`, `telnet:`..). 
+- It has got a system for allowed listing URL protocols. You can say that attribute values may only start with `http:`, `https:`, `ftp:` and `gopher:`, but no other URL protocols (`javascript:`, `java:`, `about:`, `telnet:`..).
   The functions that do this work handle whitespace, upper/lower case, HTML entities (`jav&#97;script:`) and repeated entries (`javascript:javascript:alert(57)`),
-* It also normalizes HTML entities as a nice side effect,
-* It removes Netscape 4's JavaScript entities `&{alert(57)};`,
-* It handles `NULL` bytes and Opera's `chr(173)` whitespace characters,
-* Provides allowlists of tag and protocol.
+- It also normalizes HTML entities as a nice side effect,
+- It removes Netscape 4's JavaScript entities `&{alert(57)};`,
+- It handles `NULL` bytes and Opera's `chr(173)` whitespace characters,
+- Provides allowlists of tag and protocol.
 
 ## Requirements
 
 ### Version PHP
 
 | Version PHP     | Soosyze Kses 3.x |
-|-----------------|------------------|
+| --------------- | ---------------- |
 | <= 7.1          | ✗ Unsupported    |
 | 7.2 / 7.3 / 7.4 | ✓ Supported      |
 | 8.0 / 8.1       | ✓ Supported      |
@@ -54,11 +54,13 @@ Some of kses current features are:
 To install **Kses** via Composer you must have the installer or the binary file [Composer](https://getcomposer.org/download/)
 
 Go to your project directory, open a command prompt and run the following command:
+
 ```sh
 composer require soosyze/kses --no-dev
 ```
 
 Or, if you use the binary file,
+
 ```sh
 php composer.phar require soosyze/kses --no-dev
 ```
@@ -72,7 +74,7 @@ It's very easy to use kses in your own PHP web application! Basic usage looks li
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Kses\Kses;
+use Soosyze\Kses\Xss;
 
 $allowedTags = [
     'a'  => [
@@ -89,7 +91,7 @@ $allowedTags = [
 
 $allowedProtocols = [ 'http', 'https' ];
 
-$xss = new Kses($allowed, $allowedProtocols);
+$xss = new Xss($allowed, $allowedProtocols);
 
 $xss->filter('
     <h1>Lorem ipsum</h1>
@@ -108,8 +110,8 @@ You can list the elements and attributes in the array in any mixture of upper an
 It's important to select the right allowed attributes, so you won't open up an XSS hole by mistake.
 Some important attributes that you mustn't allow include but are not limited to:
 
-* Style,
-* All intrinsic events attributes (`onMouseOver` and so `on`, `on*` really).
+- Style,
+- All intrinsic events attributes (`onMouseOver` and so `on`, `on*` really).
 
 It's also important to note that kses HTML input must be cleaned of all slashes coming from magic quotes.
 If the rest of your code requires these slashes to be present, you can always add them again after calling kses with a simple `addslashes()` call.
@@ -118,22 +120,22 @@ If the rest of your code requires these slashes to be present, you can always ad
 
 Authorization lists for tags and protocols are available :
 
-* [KsesAllowedList::getProtocols();](src/KsesAllowedList.php#L7), list of default protocols,
-* [KsesAllowedList::getTags();](src/KsesAllowedList.php#L31), list of default tags,
-* [KsesAllowedList::getTagsAdmin()](src/KsesAllowedList.php#L119).
+- [AllowedList::getProtocols();](src/KsesAllowedList.php#L7), list of default protocols,
+- [AllowedList::getTags();](src/KsesAllowedList.php#L31), list of default tags,
+- [AllowedList::getTagsAdmin()](src/KsesAllowedList.php#L119).
 
 ```php
 <?php
 
 require __DIR__ . '/vendor/autoload.php';
 
-use Kses\Kses;
-use Kses\KsesAllowedList;
+use Soosyze\Kses\Xss;
+use Soosyze\Kses\AllowedList;
 
-$xss = new Kses();
+$xss = new Xss();
 /**
  * Similar to :
- * $xss = new Kses(KsesAllowedList::getTags(), KsesAllowedList::getProtocols());
+ * $xss = new Xss(AllowedList::getTags(), AllowedList::getProtocols());
  */
 
 $xss->filter('<SCRIPT SRC=http://xss.rocks/xss.js></SCRIPT>');
@@ -227,12 +229,13 @@ You can combine more than one check, by putting one after the other in the inner
 ### Allowed listed URL protocols
 
 By default Kses loads with its own list of protocols:
-* ftp, http, https, irc, news, nntp, rtsp, sftp, ssh, tel, telnet, webcal.
+
+- ftp, http, https, irc, news, nntp, rtsp, sftp, ssh, tel, telnet, webcal.
 
 Pretty reasonable, but anyone who wants to change it just calls the `setAllowedProtocols()` or `addAlloweProtocol()` function with a third parameter, like this:
 
 ```php
-$xss = new Kses();
+$xss = new Xss();
 
 $xss->setAllowedProtocols(['http', 'https']);
 
@@ -251,18 +254,18 @@ If you have found any security problems (particularly XSS, naturally) in kses, p
 
 ## The first authors of Kses
 
-* **Ulf Harnhammar**, (main coder, project leader) metaur at users dot sourceforge dot net http://www.advogato.org/person/metaur/
-* **Richard R. Vásquez, Jr.**, (coder of object-oriented kses) contact him at http://chaos.org/contact/
+- **Ulf Harnhammar**, (main coder, project leader) metaur at users dot sourceforge dot net http://www.advogato.org/person/metaur/
+- **Richard R. Vásquez, Jr.**, (coder of object-oriented kses) contact him at http://chaos.org/contact/
 
 ### Thanks to
 
-* **Peter Valach**, code review and feature suggestions
-* **Simon Cornelius P. Umacob**, testing
-* **Dirk Haun**, feature suggestion
-* **Hendy Irawan**, bug report and documentation suggestion
-* **dude21**, feature suggestion
-* **Christian Bolstad**, documentation suggestion
-* **SourceForge**, project hosting
+- **Peter Valach**, code review and feature suggestions
+- **Simon Cornelius P. Umacob**, testing
+- **Dirk Haun**, feature suggestion
+- **Hendy Irawan**, bug report and documentation suggestion
+- **dude21**, feature suggestion
+- **Christian Bolstad**, documentation suggestion
+- **SourceForge**, project hosting
 
 Thanks also go to a lot of people who posted to the Bugtraq and mailing lists about XSS or HTML filters. They gave us some valuable insights.
 
