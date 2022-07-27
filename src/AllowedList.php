@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Kses;
+namespace Soosyze\Kses;
 
-class KsesAllowedList
+class AllowedList
 {
     /**
      * @return array

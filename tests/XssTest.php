@@ -1,40 +1,40 @@
 <?php
 
-namespace Kses\Tests;
+namespace Soosyze\Kses\Tests;
 
-use Kses\Kses;
-use Kses\KsesAllowedList;
+use Soosyze\Kses\AllowedList;
+use Soosyze\Kses\Xss;
 
-class KsesTest extends \PHPUnit\Framework\TestCase
+class XssTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var Kses
+     * @var Xss
      */
-    protected $kses;
+    protected $xss;
 
     protected function setUp(): void
     {
-        $this->kses = new Kses(KsesAllowedList::getTagsAdmin());
+        $this->xss = new Xss(AllowedList::getTagsAdmin());
     }
 
     public function testCorrectTag(): void
     {
         $html   = 'kses \'kses\' /kses "kses" kses \\kses\\';
-        $filter = $this->kses->filter($html);
+        $filter = $this->xss->filter($html);
 
         $this->assertEquals($html, $filter);
     }
 
     public function testCorrectTag2(): void
     {
-        $filter = (new Kses)->filter('kses<br>');
+        $filter = (new Xss)->filter('kses<br>');
 
         $this->assertEquals($filter, 'kses<br>');
     }
 
     public function testCorrectTag3(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->addAllowedTag('br')
             ->filter('kses <BR >');
 
@@ -43,7 +43,7 @@ class KsesTest extends \PHPUnit\Framework\TestCase
 
     public function testCorrectTag4(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->addAllowedTag('br')
             ->filter('kses > 5 <br>');
 
@@ -52,7 +52,7 @@ class KsesTest extends \PHPUnit\Framework\TestCase
 
     public function testCorrectTag5(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->addAllowedTag('br')
             ->filter('kses < br');
 
@@ -61,7 +61,7 @@ class KsesTest extends \PHPUnit\Framework\TestCase
 
     public function testCorrectTag6(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->setAllowedTags([
                 'br' => [],
                 'a'  => []
@@ -73,7 +73,7 @@ class KsesTest extends \PHPUnit\Framework\TestCase
 
     public function testCorrectTag7(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->filter('kses <a href=5>');
 
         $this->assertEquals($filter, 'kses <a href="5">');
@@ -81,7 +81,7 @@ class KsesTest extends \PHPUnit\Framework\TestCase
 
     public function testCorrectTag8(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->filter('kses <a href>');
 
         $this->assertEquals($filter, 'kses <a href>');
@@ -89,7 +89,7 @@ class KsesTest extends \PHPUnit\Framework\TestCase
 
     public function testCorrectTag9(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->filter('kses <a href href=5 href=\'5\' href="5" dummy>');
 
         $this->assertEquals($filter, 'kses <a href href="5" href=\'5\' href="5">');
@@ -97,7 +97,7 @@ class KsesTest extends \PHPUnit\Framework\TestCase
 
     public function testCorrectTag10(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->filter('kses <a href="kses\\\\kses">');
 
         $this->assertEquals($filter, 'kses <a href="kses\\\\kses">');
@@ -105,7 +105,7 @@ class KsesTest extends \PHPUnit\Framework\TestCase
 
     public function testCorrectTag11(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->addAllowedTag('a', [ 'href' => [ 'maxlen' => 6 ] ])
             ->filter('kses <a href="xxxxxx">');
 
@@ -114,7 +114,7 @@ class KsesTest extends \PHPUnit\Framework\TestCase
 
     public function testCorrectTag12(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->addAllowedTag('a', [ 'href' => [ 'maxlen' => 6 ] ])
             ->filter('kses <a href="xxxxxxx">');
 
@@ -123,7 +123,7 @@ class KsesTest extends \PHPUnit\Framework\TestCase
 
     public function testCorrectTag13(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->addAllowedTag('a', [ 'href' => [ 'maxval' => 686 ] ])
             ->filter('kses <a href="687">');
 
@@ -132,7 +132,7 @@ class KsesTest extends \PHPUnit\Framework\TestCase
 
     public function testCorrectTag14(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->addAllowedTag('a', [ 'href' => [ 'maxlen' => 6 ] ])
             ->filter('kses <a href="xx"   /  >');
 
@@ -141,7 +141,7 @@ class KsesTest extends \PHPUnit\Framework\TestCase
 
     public function testCorrectTag15(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->filter('kses <a href="JAVA java scrIpt : SCRIPT  :  alert(57)">');
 
         $this->assertEquals($filter, 'kses <a href="alert(57)">');
@@ -149,12 +149,12 @@ class KsesTest extends \PHPUnit\Framework\TestCase
 
     public function testCorrectTag16(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->filter('kses <a href="' . chr(173) . '">');
 
         $this->assertEquals($filter, '');
 
-        $filter2 = $this->kses
+        $filter2 = $this->xss
             ->filter('kses <a href="htt&#32; &#173;&#Xad;P://ulf">');
 
         $this->assertEquals($filter2, 'kses <a href="http://ulf">');
@@ -162,7 +162,7 @@ class KsesTest extends \PHPUnit\Framework\TestCase
 
     public function testCorrectTag17(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->filter('kses <a href="/start.php"> kses <a href="start.php">');
 
         $this->assertEquals($filter, 'kses <a href="/start.php"> kses <a href="start.php">');
@@ -170,7 +170,7 @@ class KsesTest extends \PHPUnit\Framework\TestCase
 
     public function testVoid(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->filter('');
 
         $this->assertEquals($filter, '');
@@ -178,7 +178,7 @@ class KsesTest extends \PHPUnit\Framework\TestCase
 
     public function testComment(): void
     {
-        $filter = $this->kses
+        $filter = $this->xss
             ->addAllowedTag('!--')
             ->filter('kses <!-- comment -->');
 

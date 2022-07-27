@@ -8,7 +8,7 @@ declare(strict_types=1);
  * @copyright (c) 2002, 2003, 2005  Ulf Harnhammar
  */
 
-namespace Kses;
+namespace Soosyze\Kses;
 
 /**
  * HTML/XHTML filter that only allows some elements and attributes.
@@ -16,7 +16,7 @@ namespace Kses;
  *
  * @see https://owasp.org/www-community/xss-filter-evasion-cheatsheet
  */
-class Kses
+class Xss
 {
     /**
      * @var array
@@ -33,10 +33,10 @@ class Kses
         array $allowedProtocols = []
     ) {
         $this->allowedHtml      = empty($allowedHtml)
-            ? KsesAllowedList::getTags()
+            ? AllowedList::getTags()
             : $allowedHtml;
         $this->allowedProtocols = empty($allowedProtocols)
-            ? KsesAllowedList::getProtocols()
+            ? AllowedList::getProtocols()
             : $allowedProtocols;
     }
 
