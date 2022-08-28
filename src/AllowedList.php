@@ -31,6 +31,7 @@ class AllowedList
                     'valueless' => 'y',
                 ],
                 'href'     => 1,
+                'id'       => 1,
                 'rel'      => 1,
                 'rev'      => 1,
                 'name'     => 1,
@@ -38,13 +39,15 @@ class AllowedList
             ],
             'abbr'       => [
                 'class' => 1,
+                'id'    => 1,
                 'lang'  => 1,
                 'title' => 1
             ],
-            'b'          => [ 'class' => 1 ],
+            'b'          => [ 'class' => 1, 'id' => 1 ],
             'blockquote' => [
                 'cite'     => 1,
                 'class'    => 1,
+                'id'       => 1,
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
@@ -52,14 +55,16 @@ class AllowedList
             'cite'       => [
                 'class' => 1,
                 'dir'   => 1,
+                'id'    => 1,
                 'lang'  => 1
             ],
-            'code'       => [ 'class' => 1 ],
-            'dd'         => [ 'class' => 1 ],
+            'code'       => [ 'class' => 1, 'id' => 1 ],
+            'dd'         => [ 'class' => 1, 'id' => 1 ],
             'div'        => [
                 'align'    => 1,
                 'class'    => 1,
                 'dir'      => 1,
+                'id'       => 1,
                 'lang'     => 1,
                 'style'    => [
                     'content' => [
@@ -71,10 +76,10 @@ class AllowedList
                 ],
                 'xml:lang' => 1
             ],
-            'dl'         => [ 'class' => 1 ],
-            'dt'         => [ 'class' => 1 ],
-            'em'         => [ 'class' => 1 ],
-            'i'          => [ 'aria-hidden' => 1, 'class' => 1 ],
+            'dl'         => [ 'class' => 1, 'id' => 1 ],
+            'dt'         => [ 'class' => 1, 'id' => 1 ],
+            'em'         => [ 'class' => 1, 'id' => 1 ],
+            'i'          => [ 'aria-hidden' => 1, 'class' => 1, 'id' => 1 ],
             'img'        => [
                 'alt'      => 1,
                 'align'    => 1,
@@ -82,20 +87,22 @@ class AllowedList
                 'border'   => 1,
                 'height'   => 1,
                 'hspace'   => 1,
+                'id'       => 1,
                 'longdesc' => 1,
                 'vspace'   => 1,
                 'src'      => 1,
                 'usemap'   => 1,
                 'width'    => 1
             ],
-            'kbd'        => [ 'class' => 1 ],
-            'li'         => [ 'class' => 1 ],
-            'mark'       => [ 'class' => 1 ],
-            'ol'         => [ 'class' => 1 ],
+            'kbd'        => [ 'class' => 1, 'id' => 1 ],
+            'li'         => [ 'class' => 1, 'id' => 1 ],
+            'mark'       => [ 'class' => 1, 'id' => 1 ],
+            'ol'         => [ 'class' => 1, 'id' => 1 ],
             'p'          => [
                 'align'    => 1,
                 'class'    => 1,
                 'dir'      => 1,
+                'id'       => 1,
                 'lang'     => 1,
                 'style'    => [
                     'content' => [
@@ -109,15 +116,16 @@ class AllowedList
             ],
             'pre'        => [
                 'class' => 1,
+                'id'    => 1,
                 'width' => 1
             ],
-            'small'      => [ 'class' => 1 ],
-            'strong'     => [ 'class' => 1 ],
-            'sub'        => [ 'class' => 1 ],
-            'sup'        => [ 'class' => 1 ],
-            'u'          => [ 'class' => 1 ],
-            'ul'         => [ 'class' => 1 ],
-            'var'        => [ 'class' => 1 ]
+            'small'      => [ 'class' => 1, 'id' => 1 ],
+            'strong'     => [ 'class' => 1, 'id' => 1 ],
+            'sub'        => [ 'class' => 1, 'id' => 1 ],
+            'sup'        => [ 'class' => 1, 'id' => 1 ],
+            'u'          => [ 'class' => 1, 'id' => 1 ],
+            'ul'         => [ 'class' => 1, 'id' => 1 ],
+            'var'        => [ 'class' => 1, 'id' => 1 ]
         ];
     }
 
@@ -131,11 +139,13 @@ class AllowedList
         return self::getTags() + [
             'acronym'    => [
                 'class' => 1,
+                'id'    => 1,
                 'lang'  => 1,
                 'title' => 1
             ],
             'address'    => [
                 'class' => 1,
+                'id'    => 1,
                 'lang'  => 1,
                 'title' => 1
             ],
@@ -144,6 +154,7 @@ class AllowedList
                 'class'  => 1,
                 'coords' => 1,
                 'href'   => 1,
+                'id'     => 1,
                 'nohref' => 1,
                 'shape'  => 1,
                 'target' => 1
@@ -152,6 +163,7 @@ class AllowedList
                 'align'    => 1,
                 'class'    => 1,
                 'dir'      => 1,
+                'id'       => 1,
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
@@ -159,6 +171,7 @@ class AllowedList
                 'align'    => 1,
                 'class'    => 1,
                 'dir'      => 1,
+                'id'       => 1,
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
@@ -166,17 +179,23 @@ class AllowedList
                 'autoplay' => 1,
                 'class'    => 1,
                 'controls' => 1,
+                'id'       => 1,
                 'loop'     => 1,
                 'muted'    => 1,
                 'preload'  => 1,
                 'src'      => 1
             ],
-            'bdi'        => [ 'class' => 1 ],
-            'bdo'        => [ 'class' => 1, 'dir' => 1 ],
-            'big'        => [ 'class' => 1 ],
+            'bdi'        => [ 'class' => 1, 'id' => 1 ],
+            'bdo'        => [
+                'class' => 1,
+                'dir'   => 1,
+                'id'    => 1
+            ],
+            'big'        => [ 'class' => 1, 'id' => 1 ],
             'button'     => [
                 'class'    => 1,
                 'disabled' => 1,
+                'id'       => 1,
                 'name'     => 1,
                 'type'     => 1,
                 'value'    => 1
@@ -187,8 +206,9 @@ class AllowedList
                 'char'    => 1,
                 'charoff' => 1,
                 'class'   => 1,
-                'span'    => 1,
                 'dir'     => 1,
+                'id'      => 1,
+                'span'    => 1,
                 'valign'  => 1,
                 'width'   => 1
             ],
@@ -197,6 +217,7 @@ class AllowedList
                 'char'    => 1,
                 'charoff' => 1,
                 'class'   => 1,
+                'id'      => 1,
                 'span'    => 1,
                 'valign'  => 1,
                 'width'   => 1
@@ -206,16 +227,18 @@ class AllowedList
                 'align'    => 1,
                 'class'    => 1,
                 'dir'      => 1,
+                'id'       => 1,
                 'lang'     => 1,
                 'open'     => 1,
                 'xml:lang' => 1
             ],
-            'dfn'        => [ 'class' => 1 ],
-            'fieldset'   => [ 'class' => 1 ],
+            'dfn'        => [ 'class' => 1, 'id' => 1 ],
+            'fieldset'   => [ 'class' => 1, 'id' => 1 ],
             'figcaption' => [
                 'align'    => 1,
                 'class'    => 1,
                 'dir'      => 1,
+                'id'       => 1,
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
@@ -223,6 +246,7 @@ class AllowedList
                 'align'    => 1,
                 'class'    => 1,
                 'dir'      => 1,
+                'id'       => 1,
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
@@ -230,18 +254,21 @@ class AllowedList
                 'color' => 1,
                 'class' => 1,
                 'face'  => 1,
+                'id'    => 1,
                 'size'  => 1
             ],
             'footer'     => [
                 'align'    => 1,
                 'class'    => 1,
                 'dir'      => 1,
+                'id'       => 1,
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
             'h1'         => [
                 'align' => 1,
                 'class' => 1,
+                'id'    => 1,
                 'style' => [
                     'content' => [
                         'text-align: center;',
@@ -254,6 +281,7 @@ class AllowedList
             'h2'         => [
                 'align' => 1,
                 'class' => 1,
+                'id'    => 1,
                 'style' => [
                     'content' => [
                         'text-align: center;',
@@ -266,6 +294,7 @@ class AllowedList
             'h3'         => [
                 'align' => 1,
                 'class' => 1,
+                'id'    => 1,
                 'style' => [
                     'content' => [
                         'text-align: center;',
@@ -278,6 +307,7 @@ class AllowedList
             'h4'         => [
                 'align' => 1,
                 'class' => 1,
+                'id'    => 1,
                 'style' => [
                     'content' => [
                         'text-align: center;',
@@ -290,6 +320,7 @@ class AllowedList
             'h5'         => [
                 'align' => 1,
                 'class' => 1,
+                'id'    => 1,
                 'style' => [
                     'content' => [
                         'text-align: center;',
@@ -302,6 +333,7 @@ class AllowedList
             'h6'         => [
                 'align' => 1,
                 'class' => 1,
+                'id'    => 1,
                 'style' => [
                     'content' => [
                         'text-align: center;',
@@ -315,6 +347,7 @@ class AllowedList
                 'align'    => 1,
                 'class'    => 1,
                 'dir'      => 1,
+                'id'       => 1,
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
@@ -322,12 +355,14 @@ class AllowedList
                 'align'    => 1,
                 'class'    => 1,
                 'dir'      => 1,
+                'id'       => 1,
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
             'hr'         => [
                 'align'   => 1,
                 'class'   => 1,
+                'id'      => 1,
                 'noshade' => 1,
                 'size'    => 1,
                 'width'   => 1
@@ -336,6 +371,7 @@ class AllowedList
                 'allowfullscreen' => 1,
                 'frameborder'     => 1,
                 'height'          => 1,
+                'id'              => 1,
                 'sandbox'         => 1,
                 'scrolling'       => 1,
                 'src'             => 1,
@@ -347,32 +383,35 @@ class AllowedList
             'ins'        => [
                 'datetime' => 1,
                 'cite'     => 1,
-                'class'    => 1
+                'class'    => 1,
+                'id'       => 1
             ],
-            'label'      => [ 'class' => 1, 'for' => 1 ],
-            'legend'     => [ 'align' => 1, 'class' => 1 ],
-            'map'        => [ 'class' => 1, 'name' => 1 ],
-            'menu'       => [ 'class' => 1, 'type' => 1 ],
-            'meter'      => [ 'class' => 1 ],
+            'label'      => [ 'class' => 1, 'for' => 1, 'id' => 1 ],
+            'legend'     => [ 'align' => 1, 'class' => 1, 'id' => 1 ],
+            'map'        => [ 'class' => 1, 'id' => 1, 'name' => 1 ],
+            'menu'       => [ 'class' => 1, 'id' => 1, 'type' => 1 ],
+            'meter'      => [ 'class' => 1, 'id' => 1 ],
             'nav'        => [
                 'align'    => 1,
                 'class'    => 1,
                 'dir'      => 1,
+                'id'       => 1,
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
-            'output'     => [ 'class' => 1 ],
-            'progress'   => [ 'class' => 1 ],
-            'q'          => [ 'cite' => 1, 'class' => 1 ],
-            'rp'         => [ 'class' => 1 ],
-            'rt'         => [ 'class' => 1 ],
-            'ruby'       => [ 'class' => 1 ],
-            's'          => [ 'class' => 1 ],
-            'samp'       => [ 'class' => 1 ],
+            'output'     => [ 'class' => 1, 'id' => 1 ],
+            'progress'   => [ 'class' => 1, 'id' => 1 ],
+            'q'          => [ 'cite' => 1, 'class' => 1, 'id' => 1 ],
+            'rp'         => [ 'class' => 1, 'id' => 1 ],
+            'rt'         => [ 'class' => 1, 'id' => 1 ],
+            'ruby'       => [ 'class' => 1, 'id' => 1 ],
+            's'          => [ 'class' => 1, 'id' => 1 ],
+            'samp'       => [ 'class' => 1, 'id' => 1 ],
             'section'    => [
                 'align'    => 1,
                 'class'    => 1,
                 'dir'      => 1,
+                'id'       => 1,
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
@@ -380,14 +419,16 @@ class AllowedList
                 'align'    => 1,
                 'class'    => 1,
                 'dir'      => 1,
+                'id'       => 1,
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
-            'strike'     => [ 'class' => 1 ],
+            'strike'     => [ 'class' => 1, 'id' => 1 ],
             'summary'    => [
                 'align'    => 1,
                 'class'    => 1,
                 'dir'      => 1,
+                'id'       => 1,
                 'lang'     => 1,
                 'xml:lang' => 1
             ],
@@ -399,6 +440,7 @@ class AllowedList
                 'cellspacing' => 1,
                 'class'       => 1,
                 'dir'         => 1,
+                'id'          => 1,
                 'rules'       => 1,
                 'summary'     => 1,
                 'width'       => 1
@@ -408,6 +450,7 @@ class AllowedList
                 'char'    => 1,
                 'charoff' => 1,
                 'class'   => 1,
+                'id'      => 1,
                 'valign'  => 1
             ],
             'td'         => [
@@ -422,6 +465,7 @@ class AllowedList
                 'dir'     => 1,
                 'headers' => 1,
                 'height'  => 1,
+                'id'      => 1,
                 'nowrap'  => 1,
                 'rowspan' => 1,
                 'scope'   => 1,
@@ -433,6 +477,7 @@ class AllowedList
                 'char'    => 1,
                 'charoff' => 1,
                 'class'   => 1,
+                'id'      => 1,
                 'valign'  => 1
             ],
             'th'         => [
@@ -446,6 +491,7 @@ class AllowedList
                 'colspan' => 1,
                 'headers' => 1,
                 'height'  => 1,
+                'id'      => 1,
                 'nowrap'  => 1,
                 'rowspan' => 1,
                 'scope'   => 1,
@@ -457,31 +503,35 @@ class AllowedList
                 'char'    => 1,
                 'charoff' => 1,
                 'class'   => 1,
+                'id'      => 1,
                 'valign'  => 1
             ],
-            'title'      => [ 'class' => 1 ],
+            'title'      => [ 'class' => 1, 'id' => 1 ],
             'tr'         => [
                 'align'   => 1,
                 'bgcolor' => 1,
                 'char'    => 1,
                 'charoff' => 1,
                 'class'   => 1,
+                'id'      => 1,
                 'valign'  => 1
             ],
             'track'      => [
                 'class'   => 1,
                 'default' => 1,
+                'id'      => 1,
                 'kind'    => 1,
                 'label'   => 1,
                 'src'     => 1,
                 'srclang' => 1
             ],
-            'tt'         => [ 'class' => 1 ],
+            'tt'         => [ 'class' => 1, 'id' => 1 ],
             'video'      => [
                 'autoplay' => 1,
                 'class'    => 1,
                 'controls' => 1,
                 'height'   => 1,
+                'id'       => 1,
                 'loop'     => 1,
                 'muted'    => 1,
                 'poster'   => 1,
@@ -489,7 +539,7 @@ class AllowedList
                 'src'      => 1,
                 'width'    => 1
             ],
-            'wbr'        => [ 'class' => 1 ]
+            'wbr'        => [ 'class' => 1, 'id' => 1 ]
         ];
     }
 }
