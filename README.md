@@ -45,7 +45,7 @@ Some of kses current features are:
 | --------------- | ---------------- |
 | <= 7.1          | ✗ Unsupported    |
 | 7.2 / 7.3 / 7.4 | ✓ Supported      |
-| 8.0 / 8.1       | ✓ Supported      |
+| 8.0 / 8.1 / 8.2 | ✓ Supported      |
 
 ## Installation
 
