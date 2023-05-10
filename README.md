@@ -91,7 +91,7 @@ $allowedTags = [
 
 $allowedProtocols = [ 'http', 'https' ];
 
-$xss = new Xss($allowed, $allowedProtocols);
+$xss = new Xss($allowedTags, $allowedProtocols);
 
 $xss->filter('
     <h1>Lorem ipsum</h1>
